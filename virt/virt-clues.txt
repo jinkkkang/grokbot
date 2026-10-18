@@ -1,0 +1,49 @@
+=== /.dockerenv / .containerenv ===
+ls: cannot access '/.dockerenv': No such file or directory
+ls: cannot access '/run/.containerenv': No such file or directory
+
+=== CPU hypervisor flag ===
+vmx
+hypervisor
+
+=== dmesg virtio/root/kvm (filtered) ===
+[    0.000000] Command line: console=ttyS0 root=/dev/vda random.trust_cpu=on ip=172.30.0.2::172.30.0.1:255.255.255.0::eth0:off rw loglevel=7 earlyprintk=ttyS0 print-fatal-signals=1 systemd.unified_cgroup_hierarchy=1 systemd.setenv=SWAP_SIZE_MB=0 reboot=k panic=1 nomodule i8042.noaux=1 i8042.nomux=1 i8042.dumbkbd=1 clocksource=kvm-clock tsc=unstable nosoftlockup root=/dev/vda rw
+[    0.000000] Hypervisor detected: KVM
+[    0.000000] kvm-clock: Using msrs 4b564d01 and 4b564d00
+[    0.000000] kvm-clock: using sched offset of 63989836 cycles
+[    0.000385] clocksource: kvm-clock: mask: 0xffffffffffffffff max_cycles: 0x1cd42e4dffb, max_idle_ns: 881590591483 ns
+[    0.054686] kvm-guest: APIC: eoi() replaced with kvm_guest_apic_eoi_write()
+[    0.055258] kvm-guest: KVM setup pv remote TLB flush
+[    0.055647] kvm-guest: setup PV sched yield
+[    0.058310] Booting paravirtualized kernel on KVM
+[    0.062180] kvm-guest: PV spinlocks enabled
+[    0.063067] Kernel command line: console=ttyS0 root=/dev/vda random.trust_cpu=on ip=172.30.0.2::172.30.0.1:255.255.255.0::eth0:off rw loglevel=7 earlyprintk=ttyS0 print-fatal-signals=1 systemd.unified_cgroup_hierarchy=1 systemd.setenv=SWAP_SIZE_MB=0 reboot=k panic=1 nomodule i8042.noaux=1 i8042.nomux=1 i8042.dumbkbd=1 clocksource=kvm-clock tsc=unstable nosoftlockup root=/dev/vda rw
+[    0.177224] kvm-guest: APIC: send_IPI_mask() replaced with kvm_send_ipi_mask()
+[    0.177771] kvm-guest: APIC: send_IPI_mask_allbutself() replaced with kvm_send_ipi_mask_allbutself()
+[    0.178415] kvm-guest: setup PV IPIs
+[    0.183882] smpboot: x86: Booting SMP configuration:
+[    0.273114] clocksource: Switched to clocksource kvm-clock
+[    0.332214] kvm_amd: CPU 2 isn't AMD or Hygon
+[    0.356128] virtio-pci 0000:00:01.0: enabling device (0000 -> 0002)
+[    0.356927] virtio-pci 0000:00:02.0: enabling device (0000 -> 0002)
+[    0.357662] virtio-pci 0000:00:03.0: enabling device (0000 -> 0002)
+[    0.358366] virtio-pci 0000:00:04.0: enabling device (0000 -> 0002)
+[    0.359093] virtio-pci 0000:00:05.0: enabling device (0000 -> 0002)
+[    0.359832] virtio-pci 0000:00:06.0: enabling device (0000 -> 0002)
+[    0.367352] virtio_blk virtio1: 1/0/0 default/read/poll queues
+[    0.368375] virtio_blk virtio1: [vda] 268435456 512-byte logical blocks (137 GB/128 GiB)
+[    0.369585] virtio_blk virtio2: 1/0/0 default/read/poll queues
+[    0.370762] virtio_blk virtio2: [vdb] 268435456 512-byte logical blocks (137 GB/128 GiB)
+[    0.420829] EXT4-fs (vda): mounted filesystem e6bda90c-4d45-4cd5-8585-21f19fae583d r/w with ordered data mode. Quota mode: none.
+[    0.422470] VFS: Mounted root (ext4 filesystem) on device 254:0.
+[    0.480877] systemd[1]: Detected virtualization kvm.
+[    0.726687] virtio_net virtio3 enp0s4: renamed from eth0 (while UP)
+[    0.835655] EXT4-fs (vdb): mounted filesystem 00000000-0000-0000-0000-000000000004 r/w with ordered data mode. Quota mode: none.
+
+=== /dev/kvm ===
+crw-rw---- 1 root 103 10, 232 Oct 18 16:10 /dev/kvm
+
+=== DMI (may be unreadable) ===
+cat: /sys/class/dmi/id/product_name: No such file or directory
+cat: /sys/class/dmi/id/sys_vendor: No such file or directory
+cat: /sys/class/dmi/id/bios_vendor: No such file or directory

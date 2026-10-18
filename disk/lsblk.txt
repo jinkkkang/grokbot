@@ -1,0 +1,11 @@
+NAME   SIZE TYPE FSTYPE LABEL UUID MOUNTPOINTS
+loop0    0B loop                   
+loop1    0B loop                   
+loop2    0B loop                   
+loop3    0B loop                   
+loop4    0B loop                   
+loop5    0B loop                   
+loop6    0B loop                   
+loop7    0B loop                   
+vda    128G disk                   
+vdb    128G disk                   /

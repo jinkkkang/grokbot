@@ -1,0 +1,18 @@
+=== /etc/fstab ===
+# UNCONFIGURED FSTAB FOR BASE SYSTEM
+
+=== /proc/cmdline vs current root ===
+cmdline root=:
+root=/dev/vda
+root=/dev/vda
+findmnt /:
+/dev/vdb ext4  
+stat /:
+dev=65040 ino=2
+brw-rw---- 1 root disk 254,  0 Oct 18 16:10 /dev/vda
+brw-rw---- 1 root disk 254, 16 Oct 18 16:10 /dev/vdb
+blkid:
+--: line 22: blkid: command not found
+ext4 mounted:
+vda
+vdb

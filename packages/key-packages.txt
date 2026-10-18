@@ -1,0 +1,25 @@
+=== dpkg package count ===
+665
+
+=== key packages (grep) ===
+hi  google-chrome-stable                 155.0.8059.84-1                      amd64        The web browser from Google
+ii  libpython3-stdlib:amd64              3.13.5-1                             amd64        interactive high-level object-oriented language (default python3 version)
+ii  nodejs                               20.19.2+dfsg-1+deb13u3               amd64        evented I/O for V8 javascript - runtime executable
+ii  python3                              3.13.5-1                             amd64        interactive high-level object-oriented language (default python3 version)
+ii  python3-jwcrypto                     1.5.6-1.1~deb13u1                    all          Python3 implementation of JOSE Web standards
+ii  python3-minimal                      3.13.5-1                             amd64        minimal subset of the Python language (default python3 version)
+ii  python3-packaging                    25.0-1                               all          core utilities for python3 packages
+ii  python3-venv                         3.13.5-1                             amd64        venv module for python3 (default python3 version)
+ii  python3-websockify                   0.12.0+dfsg1-4+b1                    amd64        WebSockets support for any application/server - Python 3
+ii  websockify                           0.12.0+dfsg1-4+b1                    amd64        WebSockets support for any application/server
+ii  x11vnc                               0.9.17-1                             amd64        VNC server to allow remote access to an existing X session
+ii  xvfb                                 2:21.1.16-1.3+deb13u4                amd64        Virtual Framebuffer 'fake' X server
+
+=== which / paths ===
+-rwxr-xr-x 1 root root 20336480 Oct 18 16:10 /pod-daemon
+-rwxr-xr-x 1 root root   870496 Oct 18 16:10 /tini
+-rwxr-xr-x 1 root root    21916 Oct 17 23:04 /usr/local/bin/sand-exit-watch
+-rwxr-xr-x 1 root root    50950 Oct 17 23:04 /usr/local/bin/start-sand-box
+/usr/bin/node
+/usr/bin/python3
+/usr/bin/google-chrome

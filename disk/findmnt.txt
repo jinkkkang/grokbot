@@ -1,0 +1,19 @@
+TARGET                       SOURCE             FSTYPE           OPTIONS
+/                            /dev/vdb           ext4             rw,relatime
+├─/cursor/stores             cursor-agent-store fuse.agent-store rw,nosuid,nodev,relatime,user_id=0,group_id=0,default_permissions,allow_other
+├─/proc                      proc               proc             rw,relatime
+├─/dev                       devtmpfs           devtmpfs         rw,relatime,size=8191116k,nr_inodes=2047779,mode=755
+│ ├─/dev/shm                 tmpfs              tmpfs            rw,nosuid,nodev
+│ │ └─/dev/shm               shm                tmpfs            rw,nosuid,nodev,noexec,relatime
+│ ├─/dev/pts                 devpts             devpts           rw,nosuid,noexec,relatime,gid=5,mode=620,ptmxmode=000
+│ ├─/dev/mqueue              mqueue             mqueue           rw,nosuid,nodev,noexec,relatime
+│ └─/dev/hugepages           hugetlbfs          hugetlbfs        rw,relatime,pagesize=2M
+└─/sys                       sysfs              sysfs            rw,relatime
+  ├─/sys/kernel/security     securityfs         securityfs       rw,nosuid,nodev,noexec,relatime
+  ├─/sys/fs/selinux          selinuxfs          selinuxfs        rw,nosuid,noexec,relatime
+  ├─/sys/fs/cgroup           cgroup2            cgroup2          rw,nosuid,nodev,noexec,relatime,nsdelegate,memory_recursiveprot
+  ├─/sys/fs/pstore           pstore             pstore           rw,nosuid,nodev,noexec,relatime
+  ├─/sys/fs/bpf              bpf                bpf              rw,nosuid,nodev,noexec,relatime,mode=700
+  ├─/sys/kernel/tracing      tracefs            tracefs          rw,nosuid,nodev,noexec,relatime
+  ├─/sys/kernel/debug        debugfs            debugfs          rw,nosuid,nodev,noexec,relatime
+  └─/sys/fs/fuse/connections fusectl            fusectl          rw,nosuid,nodev,noexec,relatime

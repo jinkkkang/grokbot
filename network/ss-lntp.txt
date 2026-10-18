@@ -1,0 +1,23 @@
+State  Recv-Q Send-Q Local Address:Port  Peer Address:PortProcess                                                           
+LISTEN 0      10         127.0.0.1:9224       0.0.0.0:*    users:(("chrome",pid=7908,fd=92))                                
+LISTEN 0      128        127.0.0.1:8791       0.0.0.0:*    users:(("sand-egress-tun",pid=374,fd=10))                        
+LISTEN 0      100          0.0.0.0:6080       0.0.0.0:*    users:(("websockify",pid=834,fd=3))                              
+LISTEN 0      100          0.0.0.0:6081       0.0.0.0:*    users:(("websockify",pid=36186,fd=3),("websockify",pid=204,fd=3))
+LISTEN 0      5            0.0.0.0:2375       0.0.0.0:*                                                                     
+LISTEN 0      32         127.0.0.1:5902       0.0.0.0:*    users:(("x11vnc",pid=2770,fd=8))                                 
+LISTEN 0      32         127.0.0.1:5903       0.0.0.0:*    users:(("x11vnc",pid=13136,fd=8))                                
+LISTEN 0      32         127.0.0.1:5900       0.0.0.0:*    users:(("x11vnc",pid=807,fd=8))                                  
+LISTEN 0      128          0.0.0.0:8790       0.0.0.0:*    users:(("sand-egress-tun",pid=374,fd=9))                         
+LISTEN 0      128          0.0.0.0:50052      0.0.0.0:*                                                                     
+LISTEN 0      511          0.0.0.0:1339       0.0.0.0:*    users:(("node",pid=227,fd=21))                                   
+LISTEN 0      511          0.0.0.0:1340       0.0.0.0:*    users:(("node",pid=580,fd=54))                                   
+LISTEN 0      128          0.0.0.0:26500      0.0.0.0:*                                                                     
+LISTEN 0      511                *:13602            *:*    users:(("node",pid=2707,fd=22))                                  
+LISTEN 0      511                *:13603            *:*    users:(("node",pid=13124,fd=22))                                 
+LISTEN 0      511                *:14002            *:*    users:(("node",pid=2707,fd=21))                                  
+LISTEN 0      511                *:14003            *:*    users:(("node",pid=13124,fd=21))                                 
+LISTEN 0      32             [::1]:5900          [::]:*    users:(("x11vnc",pid=807,fd=9))                                  
+LISTEN 0      32             [::1]:5903          [::]:*    users:(("x11vnc",pid=13136,fd=9))                                
+LISTEN 0      32             [::1]:5902          [::]:*    users:(("x11vnc",pid=2770,fd=9))                                 
+LISTEN 0      511                *:1338             *:*    users:(("node",pid=373,fd=23))                                   
+LISTEN 0      511                *:1337             *:*    users:(("node",pid=373,fd=21))                                   

@@ -1,0 +1,9 @@
+[    0.000000] Command line: console=ttyS0 root=/dev/vda random.trust_cpu=on ip=172.30.0.2::172.30.0.1:255.255.255.0::eth0:off rw loglevel=7 earlyprintk=ttyS0 print-fatal-signals=1 systemd.unified_cgroup_hierarchy=1 systemd.setenv=SWAP_SIZE_MB=0 reboot=k panic=1 nomodule i8042.noaux=1 i8042.nomux=1 i8042.dumbkbd=1 clocksource=kvm-clock tsc=unstable nosoftlockup root=/dev/vda rw
+[    0.063067] Kernel command line: console=ttyS0 root=/dev/vda random.trust_cpu=on ip=172.30.0.2::172.30.0.1:255.255.255.0::eth0:off rw loglevel=7 earlyprintk=ttyS0 print-fatal-signals=1 systemd.unified_cgroup_hierarchy=1 systemd.setenv=SWAP_SIZE_MB=0 reboot=k panic=1 nomodule i8042.noaux=1 i8042.nomux=1 i8042.dumbkbd=1 clocksource=kvm-clock tsc=unstable nosoftlockup root=/dev/vda rw
+[    0.367352] virtio_blk virtio1: 1/0/0 default/read/poll queues
+[    0.368375] virtio_blk virtio1: [vda] 268435456 512-byte logical blocks (137 GB/128 GiB)
+[    0.369585] virtio_blk virtio2: 1/0/0 default/read/poll queues
+[    0.370762] virtio_blk virtio2: [vdb] 268435456 512-byte logical blocks (137 GB/128 GiB)
+[    0.420829] EXT4-fs (vda): mounted filesystem e6bda90c-4d45-4cd5-8585-21f19fae583d r/w with ordered data mode. Quota mode: none.
+[    0.422470] VFS: Mounted root (ext4 filesystem) on device 254:0.
+[    0.835655] EXT4-fs (vdb): mounted filesystem 00000000-0000-0000-0000-000000000004 r/w with ordered data mode. Quota mode: none.

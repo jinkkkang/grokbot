@@ -1,0 +1,2 @@
+machine-id: d996479feeb04e0789f4b0e9aec51b96
+Note: local VM machine-id; not a secret credential.

@@ -1,0 +1,40 @@
+=== PID tree top ===
+    PID    PPID CMD
+      7       1 /pod-daemon --ssh-auth-sock-path /run/host-services/ssh-auth.sock --ssh-auth-vsock-port 52
+    541       1 /usr/bin/dbus-daemon --syslog --fork --print-pid 4 --print-address 6 --session
+    963       1 /usr/libexec/dconf-service
+   1175       1 /bin/bash /usr/libexec/bamf/bamfdaemon-dbus-runner
+
+    PID    PPID CMD
+      1       0 /tini -- /pod-daemon --ssh-auth-sock-path /run/host-services/ssh-auth.sock --ssh-auth-vsock-port 52
+      7       1 /pod-daemon --ssh-auth-sock-path /run/host-services/ssh-auth.sock --ssh-auth-vsock-port 52
+     53       7 /usr/bin/python3 /usr/local/bin/sand-exit-watch --telemetry-log /tmp/sand-box-telemetry.log --exec-owner 338 --supervise-owner 456 --daemon-launcher orbitd=/usr/local/libexec/sand/orbitd/start
+    541       1 /usr/bin/dbus-daemon --syslog --fork --print-pid 4 --print-address 6 --session
+    963       1 /usr/libexec/dconf-service
+   1175       1 /bin/bash /usr/libexec/bamf/bamfdaemon-dbus-runner
+  37718       7 /usr/local/bin/cursor-agent-store-fuse --backend-mode direct --mount-root /cursor/stores --bcs-endpoint https://api2.cursor.sh --self-store-id bc-sand-aa441a9259ef8d592558 --pod-grant-path /run/agent-store-fuse/pod-grant --events-path /run/agent-store-fuse/events.jsonl --initial-mount user=store-174c7455-15e8-432d-be40-e7aedfe1768d --enable-file-locks --service-path aiserver.v1.AgentStoreService --dispatch-stats-interval-secs 30
+
+=== sand-exit-watch cmdline ===
+53 /usr/bin/python3 /usr/local/bin/sand-exit-watch --telemetry-log /tmp/sand-box-telemetry.log --exec-owner 338 --supervise-owner 456 --daemon-launcher orbitd=/usr/local/libexec/sand/orbitd/start
+
+=== start-sand-box references ===
+872:# The host owns the orbitd proxy socket; box processes may connect but cannot
+876:		install -d -m 2750 -o "${SAND_HOST_USER}" -g box /run/orbitd-proxy 2>/dev/null || true
+878:		install -d -m 2750 -o box -g box /run/orbitd-proxy 2>/dev/null || true
+880:		install -d -m 2700 -o root -g root /run/orbitd-proxy 2>/dev/null || true
+1067:	/tmp/start-desktop.log
+1163:	exec "${AS_BOX[@]}" /usr/local/bin/supervise-exec-daemon "${SAND_BOX_PORT_PRIMARY_EXEC_DAEMON}" /usr/local/bin/start-exec-daemon "$@"
+1169:		/usr/local/bin/supervise-egress-tunnel
+1193:			exec "${AS_EGRESS_TUNNEL[@]}" "${EGRESS_TUNNEL_WRAPPER[@]}"
+1307:				exec "${AS_HOST[@]}" /usr/bin/setsid /usr/bin/nohup /usr/bin/env \
+1310:					/usr/local/bin/supervise-sand-supervisor \
+1319:					exec "${AS_BOX[@]}" /usr/bin/setsid /usr/bin/nohup /usr/bin/env \
+1322:						/usr/local/bin/supervise-sand-supervisor \
+1332:			exec "${AS_HOST[@]}" /usr/bin/setsid /usr/bin/nohup /usr/local/bin/supervise-sand-supervisor \
+1377:	"${AS_BOX[@]}" /usr/local/bin/box-bounded-log --run /tmp/start-desktop.log -- \
+1378:		/usr/local/bin/start-desktop.sh &
+1416:			--supervise-owner "${SAND_SUPERVISOR_SUPERVISE_PID}"
+1425:	[ -x /usr/local/bin/sand-exit-watch ] &&
+1429:	exec /usr/local/bin/sand-exit-watch "${SAND_EXIT_WATCH_ARGS[@]}"
+1430:	echo "[start-sand-box] sand-exit-watch exec failed; falling back to the plain wait" >&2
+1432:	echo "[start-sand-box] sand-exit-watch is unavailable; keeping managed daemons down" >&2
