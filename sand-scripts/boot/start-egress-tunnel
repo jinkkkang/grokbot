@@ -1,3 +1,9 @@
 #!/usr/bin/env bash
+# =============================================================================
+# start-egress-tunnel — 一次启动出口隧道（学习摘录，专有代码）
+#
+# 由 supervise-egress-tunnel 调用。本身只 exec sand-egress-tunnel server，
+# 端口和重启都在监督脚本里。二进制不在本仓库。
+# =============================================================================
 set -euo pipefail
 exec /usr/local/bin/sand-egress-tunnel server "$@"

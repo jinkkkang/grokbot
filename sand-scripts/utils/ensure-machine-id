@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# ensure-machine-id — 保证 machine-id 是 32 位小写十六进制（学习摘录，专有代码）。
+# start-desktop.sh 与 start-sand-box 都会调用。优先用 Chrome profile 里持久化的那份，
+# 让同一只箱重启后设备标识不变，并让 /var/lib/dbus/machine-id 指向同一内容。
 # Chrome derives its enrollment client ID from /etc/machine-id and rejects any
 # content that is not 32 characters
 # (https://chromium.googlesource.com/chromium/src/+/151.0.7922.169/chrome/browser/policy/browser_dm_token_storage_linux.cc),

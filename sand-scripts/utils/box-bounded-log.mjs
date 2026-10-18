@@ -1,4 +1,14 @@
 #!/exec-daemon/node
+// =============================================================================
+// box-bounded-log.mjs — 日志环形缓冲（学习摘录，专有代码）
+//
+// 由 box-bounded-log 拉起：node box-bounded-log.mjs <日志路径> <父进程 PID>。
+// 从 stdin 读命令输出，在内存里留最近一段（默认单文件上限 1MiB，可用
+// SAND_BOX_BOUNDED_LOG_MAX_BYTES 改），刷到磁盘时超过上限就轮转到 <路径>.1。
+// 非常规文件或已经过大的旧日志会先删掉，避免跟着一个被换成符号链接的路径写。
+// stdin 结束（被包住的命令退出）后把剩余内容刷盘再退出。argv 里的 pid
+// 只写进锁文件标明占用者。这是日志器，不参与服务启停。
+// =============================================================================
 
 import { existsSync, lstatSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { writeFile } from "node:fs/promises";

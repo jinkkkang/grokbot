@@ -1,4 +1,17 @@
 #!/usr/bin/env bash
+# =============================================================================
+# supervise-sand-supervisor — sand-supervisor.mjs 的重启循环（学习摘录，专有代码）
+#
+# 用法：supervise-sand-supervisor <status.json> <子进程日志> <launcher> [参数...]
+# launcher 是 node，参数是 sand-supervisor.mjs。start-sand-box 在
+# SAND_SUPERVISOR_ENABLED=1 或桌面监督开启时拉起；本 PID 是 --supervise-owner。
+#
+# 探活不看端口，而看 status.json 是否在本次 launch-stamp 之后被改写。
+# 连续若干次检查 mtime 不变视为卡死（按检查次数而不是墙钟，避免冻住之后
+# 解冻被误判）。连续快速失败达到上限则 exit 1，从而结束 box。
+# 子进程可以写 restart-intent 让下一次启动跳过退避。
+# uid split 时会有两份：角色 host 的一份和角色 desktop 的一份，各写各的状态文件。
+# =============================================================================
 set -uo pipefail
 
 if [ "$#" -lt 3 ]; then

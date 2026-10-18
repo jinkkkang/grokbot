@@ -1,4 +1,18 @@
 #!/usr/bin/env bash
+# =============================================================================
+# supervise-exec-daemon — exec-daemon 的重启循环（学习摘录，专有代码）
+#
+# 用法：supervise-exec-daemon <port> <launcher> [launcher 参数...]
+# start-sand-box 以 port=1337、launcher=start-exec-daemon 调用。
+# 本进程的 PID 是 sand-exit-watch 的 --exec-owner：本脚本退出，box 结束。
+#
+# 和 start-exec-daemon 的分工：那里只 exec 一次二进制；这里负责
+#   清掉仍占着端口的上一代 exec-daemon、setsid 拉起 launcher、
+#   每 2 秒看端口还在不在、启动 30 秒内没听上或听上后又丢 3 次就杀掉重来。
+# 退避 1s→30s；子进程若活过 60 秒，退避回到 1 秒。
+# 第一次端口就绪时写一条 boot_stage=daemon_listening。
+# 进程把自己放进 agent cgroup（box-cgroups.sh）。
+# =============================================================================
 set -uo pipefail
 
 if [ "$#" -lt 2 ]; then

@@ -1,4 +1,12 @@
 #!/usr/bin/env bash
+# =============================================================================
+# orbitd-start — 镜像 daemon 的 launcher（学习摘录，专有代码）
+#
+# 沙箱路径是 /usr/local/libexec/sand/orbitd/start。不由 supervise-* 调用，
+# 而由 sand-exit-watch 按 --daemon-launcher orbitd=<本文件> 拉起。
+# 清空环境后交给 sand-daemon-supervisor run orbitd，stdout 经 box-bounded-log
+# 收到 /tmp/sand-orbitd.log。本脚本退出后，exit-watch 按自己的退避再拉一次。
+# =============================================================================
 set -euo pipefail
 
 LOG_PATH="/tmp/sand-orbitd.log"

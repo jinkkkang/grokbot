@@ -1,4 +1,16 @@
 #!/usr/bin/env bash
+# =============================================================================
+# box-doctor — 开机自检（学习摘录，专有代码）
+#
+# start-sand-box 在桌面启动之后用 box 用户把它丢到后台，输出进
+# /tmp/box-doctor.log。失败只打印 FAIL 和汇总，调用方写了 `|| true`，
+# 所以自检失败不会拆掉 box。它回答「这只箱现在能不能用」，不负责修理。
+#
+# 检查项：machine-id 与 D-Bus 那份是否一致、google-chrome-stable 能否报版本、
+# Chrome 是否接近打开文件上限、能否访问 generate_204（出口与时钟偏差）、
+# 会话 D-Bus、Xvfb、localhost:5900 的 x11vnc、:6080 的 noVNC、
+# 有 fork token 时再看 :6081、以及 xfwm4+picom 是否都在当前 DISPLAY 上。
+# =============================================================================
 set -uo pipefail
 
 # >>> box port table (from sand/src/shared/box/box-contract.ts; regenerate: pnpm --filter sand run gen:box-ports) >>>

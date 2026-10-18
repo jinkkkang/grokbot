@@ -1,4 +1,12 @@
 # shellcheck shell=bash
+# =============================================================================
+# sand-desktop-supervise.sh — 被 source 的桌面登记库（学习摘录，专有代码）
+#
+# start-sand-box 与 start-desktop.sh source 它。sand_desktop_register 把
+# 「组件名、pid、日志、重启命令」写成 /tmp/sand-desktop 下的规格，
+# sand-supervisor 的 desktop 角色据此决定要不要重拉。
+# SAND_DESKTOP_SUPERVISION_DISABLED=1 时登记函数直接返回。
+# =============================================================================
 
 SAND_DESKTOP_DIR="${SAND_DESKTOP_DIR:-/tmp/sand-desktop}"
 

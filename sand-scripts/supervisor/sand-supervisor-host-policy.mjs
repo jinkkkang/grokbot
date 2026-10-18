@@ -1,3 +1,9 @@
+// =============================================================================
+// sand-supervisor-host-policy.mjs — host 升级与崩溃的纯决策（学习摘录，专有代码）
+//
+// 不碰进程。回答：现在该不该升级、要不要等空闲、崩溃算快速失败还是正常退出、
+// 下次退避多久。sand-supervisor.mjs 拿这些结论去真正发信号和换 bundle。
+// =============================================================================
 import { createHash } from "node:crypto";
 import { closeSync, constants, fstatSync, openSync, readFileSync } from "node:fs";
 import {

@@ -1,4 +1,15 @@
 #!/usr/bin/env bash
+# =============================================================================
+# box-bounded-log — 给一条命令套上有界日志（学习摘录，专有代码）
+#
+# 用法：box-bounded-log --run <日志路径> -- <命令> [参数...]
+# 桌面栈（Xvfb、x11vnc、websockify…）和若干 node 服务都这样包一层，
+# 避免 /tmp 上的日志把磁盘写满。
+#
+# 真正截断在 box-bounded-log.mjs：本脚本拿 flock 保证同一个日志只有一个
+# sink，然后把命令的 stdout/stderr 送进那个进程。sink 起不来就改成
+# cat >/dev/null，命令本身仍继续跑——日志失败不应拖垮桌面。
+# =============================================================================
 set -uo pipefail
 
 # A `>(list)` process substitution runs asynchronously behind a pipe

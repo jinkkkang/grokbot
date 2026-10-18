@@ -1,3 +1,20 @@
+// =============================================================================
+// sand-supervisor.mjs — 箱内监督进程入口（学习摘录，专有代码，非开源许可）
+//
+// 由 supervise-sand-supervisor 用 node 拉起。文件后部的 isMain 才是进程入口：
+//   new Supervisor().start()，然后等 SIGTERM/SIGINT。
+//
+// start() 建目录、按角色打一行日志、必要时收养上一次留下的 host，再进入 tick。
+// 角色来自 SAND_SUPERVISOR_ROLE（见 sand-supervisor-contract.mjs）：
+//   未设置     一份进程同时管 host 生命周期和桌面组件
+//   host       只管 /opt/sand 里的 host：拉起、升级、崩溃标记、邮箱
+//   desktop    只根据 /tmp/sand-desktop 的规格重拉 Xvfb/VNC 等
+// uid split 时 start-sand-box 会起 host 与 desktop 各一份。
+//
+// 决策拆在同目录的 policy / bundle / identity / cgroup 模块，以及
+// desktop/sand-supervisor-desktop.mjs。本文件是把那些决策接上进程、文件和 HTTP
+// 的那一层。SIGTERM 时停掉 tick，但故意留下正在跑的 host，让下一任监督收养。
+// =============================================================================
 import http from "node:http";
 import https from "node:https";
 import { spawn } from "node:child_process";
@@ -349,6 +366,8 @@ export async function probeForkRfbChain({
   return (await probeRfbTcp(vncPort, timeoutMs)) ? "fork-websockify" : "x11vnc";
 }
 
+// 监督器本体。桌面那一半的状态机在 DesktopSupervisor；这里补上 host 子进程、
+// 升级标记、boot 时拉取 bundle、以及写给 supervise-sand-supervisor 看的 status.json。
 export class Supervisor extends DesktopSupervisor {
   constructor(opts = {}) {
     super();
@@ -394,6 +413,9 @@ export class Supervisor extends DesktopSupervisor {
     super.initializeCgroupAccounting(opts);
   }
 
+  // 建目录、打启动日志、必要时收养遗留的 host，然后立刻 tick。
+  // supervise-sand-supervisor 靠 status.json 的 mtime 判断启动成功，
+  // 所以目录创建失败只记日志，不让本进程因此退出。
   start() {
     for (const dir of [SUPERVISOR_DIR, this.acksDir, AGENT_DATA_ROOT]) {
       const error = ensureDir(dir);
@@ -1873,6 +1895,7 @@ export function postPrepareUpgrade({ port, token }) {
   });
 }
 
+// 被 import 时（测试或其它模块）不要启动循环；只有本文件是 argv[1] 才进入。
 const isMain = process.argv[1] != null && fileURLToPath(import.meta.url) === process.argv[1];
 export async function handOffOnSignal(supervisor, signal) {
   const hostPid = supervisor.runningHostPid();

@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# box-x11vnc — 先按 -rfbport 清掉占着该端口的旧 x11vnc，再 exec 新的（学习摘录，专有代码）。
+# 主桌面端口是 5900；fork 窗口是 5900+屏号。只匹配命令行里像 x11vnc 的进程。
 set -uo pipefail
 
 port=""

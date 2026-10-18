@@ -1,4 +1,21 @@
 #!/usr/bin/env bash
+# =============================================================================
+# start-sand-box — 沙箱用户态编排入口（学习摘录，专有代码，非开源许可）
+#
+# 在启动链上的位置：
+#   tini (PID 1) → pod-daemon → 本脚本 → exec 成 sand-exit-watch
+#
+# 本脚本不是长期守护进程。它在（通常是 root）里做一次性准备：遥测身份、
+# cgroup、box / sand-host 权限、目录所有权、清掉上一只 box 留下的 Chrome 锁，
+# 然后把长期服务放进后台。最后用 exec 换成 sand-exit-watch，所以进程树上
+# 看不到还在跑的 bash。
+#
+# 后台进程分三类：
+#   1. 共享设施（router、fork noVNC、cookie、UA governor）：挂了不结束 box
+#   2. 生命周期主人：supervise-exec-daemon，以及开启时的 supervise-sand-supervisor
+#   3. 桌面与观测：start-desktop.sh、box-doctor、sand-memory-watch
+# 主人进程的 PID 会交给 sand-exit-watch。主人退出，整台 box 结束。
+# =============================================================================
 set -uo pipefail
 
 export DISPLAY="${DISPLAY:-:1}"
@@ -13,6 +30,9 @@ if [ -z "${SAND_BOX_BOOT_ID:-}" ]; then
 fi
 export SAND_BOX_TELEMETRY_LOG="${SAND_BOX_TELEMETRY_LOG:-/tmp/sand-box-telemetry.log}"
 
+# --- 端口常量 ---
+# 与 utils/box-contract.generated.mjs 同一份契约。主 exec-daemon 是 1337，
+# 窗口路由 1339，fork noVNC 6081，出口隧道 8790/8791，fork exec 从 14000 起。
 # >>> box port table (from sand/src/shared/box/box-contract.ts; regenerate: pnpm --filter sand run gen:box-ports) >>>
 SAND_BOX_PORT_PRIMARY_EXEC_DAEMON=1337
 SAND_BOX_PORT_WINDOW_ROUTER=1339
@@ -52,6 +72,10 @@ emit_boot_failure() {
 
 emit_boot_stage "entrypoint_started"
 
+# --- cgroup ---
+# source box-cgroups.sh。建不起 interactive/agent/background 时，下面的函数
+# 被换成空操作，启动不会因此失败。镜像 daemon 另有一条硬条件：background
+# 组没就绪就整组不拉（见 collect_daemon_launcher_args）。
 SAND_BOX_CGROUPS_LIB="${SAND_BOX_CGROUPS_LIB:-/usr/local/bin/box-cgroups.sh}"
 if [ -r "${SAND_BOX_CGROUPS_LIB}" ]; then
 	# shellcheck source=/dev/null
@@ -78,6 +102,10 @@ if sand_user_non_root; then
 	export SAND_BOX_SCRIPT_SYNC_DISABLED="${SAND_BOX_SCRIPT_SYNC_DISABLED:-1}"
 fi
 
+# --- 用户与权限：box / sand-host ---
+# 默认 agent（用户 box）有免密 sudo。团队关掉 root 时只留时区那一条。
+# uid split 打开且探测通过时，host 与它的 supervisor 改跑 sand-host，
+# agent 的 shell、exec-daemon、桌面仍是 box。探测失败就退回「全部当 box」。
 # Team-admin opt-out (enterprise): the backend stamps SAND_BOX_SUDO_DISABLED=1
 # on a NEW pod when the owner's team turned off the agent's root access on its
 # own machine. Absent (the default) keeps the box user's blanket passwordless
@@ -730,6 +758,10 @@ if [ "$(id -u)" -eq 0 ]; then
 fi
 export SAND_HOST_UID_SPLIT_ACTIVE
 
+# --- 镜像内置 daemon（例如 orbitd）---
+# 只登记「bundled 目录里既有可执行文件又有 manifest」的服务。真正拉起发生在
+# exec 之后的 sand-exit-watch：这里只收集 --daemon-launcher SERVICE=PATH。
+# copy-in 失败，或 background cgroup 不可用，则整组保持关闭。
 SAND_DAEMON_LAUNCHERS_DIR="/usr/local/libexec/sand"
 SAND_DAEMON_RELEASE_STORE_DIR="/var/lib/sand-daemon-supervisor"
 SAND_DAEMON_LOGS_DIR="/tmp"
@@ -952,6 +984,11 @@ if [ "$(id -u)" -eq 0 ]; then
 	fi
 fi
 
+# --- 降权前缀 ---
+# AS_BOX：agent 侧，丢掉 gateway / egress token 以及值里夹带这两份 token 的变量。
+# AS_HOST：uid split 时是 sand-host 加上探测通过的 ambient capabilities，
+#          否则与 AS_BOX 相同。HOME 仍是 /home/box，因为 host 的数据在那里。
+# AS_EGRESS_TUNNEL：在 host 身份上再显式丢掉 SAND_GATEWAY_TOKEN。
 export_npm_prefix_without_seeded_npmrc() {
 	AS_BOX+=(NPM_CONFIG_PREFIX=/home/box/.local)
 }
@@ -1100,6 +1137,10 @@ if sand_host_uid_split; then
 	install -d -m 755 -o "${SAND_HOST_USER}" -g "${SAND_HOST_USER}" /tmp/sand-supervisor 2>/dev/null || true
 	install -d -m 755 -o box -g box /tmp/sand-desktop-supervisor 2>/dev/null || true
 fi
+# --- 共享设施（先于桌面和 exec-daemon）---
+# fork noVNC（6081）、窗口路由（1339）、session-sync、web-bot-auth、
+# UA governor、cookie 持久化。它们进 interactive cgroup，并在桌面监督打开时
+# 登记重启规格。这些进程不是生命周期主人，自己退出不会拆 box。
 NOVNC_HEARTBEAT_S="${SAND_NOVNC_HEARTBEAT_S:-30}"
 FORK_WEBSOCKIFY_ARGS=(
 	--web=/usr/share/novnc
@@ -1158,12 +1199,19 @@ if [ -n "${SAND_DEV_LOCAL_BACKEND_PROXY_PORTS:-}" ] && [ -r /tmp/sand-local-back
 	done
 fi
 
+# --- 生命周期主人：exec-daemon ---
+# supervise-exec-daemon 包住 start-exec-daemon，盯端口 1337。本子 shell 的 PID
+# 稍后作为 --exec-owner。OOM 分数调到 -1000，是为了内存紧张时最后才杀主人。
 (
 	printf '%s\n' '-1000' >/proc/self/oom_score_adj 2>/dev/null || true
 	exec "${AS_BOX[@]}" /usr/local/bin/supervise-exec-daemon "${SAND_BOX_PORT_PRIMARY_EXEC_DAEMON}" /usr/local/bin/start-exec-daemon "$@"
 ) >/tmp/exec-daemon.log 2>&1 &
 EXEC_DAEMON_SUPERVISOR_PID=$!
 
+# --- 可选出口隧道 ---
+# 仅 SAND_EGRESS_TUNNEL_ENABLED=1。uid split 时由这里自己做重启循环
+# （隧道身份是 sand-host，不进桌面监督）；否则 exec supervise-egress-tunnel
+# 并登记成共享桌面组件。代理地址写到 /tmp/sand-egress-proxy 给箱内其它进程读。
 if [ "${SAND_EGRESS_TUNNEL_ENABLED:-}" = "1" ]; then
 	EGRESS_TUNNEL_WRAPPER=(
 		/usr/local/bin/supervise-egress-tunnel
@@ -1238,6 +1286,9 @@ normalize_copy_in_status() {
 	printf '%s\n' "${copy_in_rc}"
 }
 
+# --- 可选的 box-store 灌入 ---
+# 把持久身份灌回这只新 box。失败时关掉 supervisor 和 snapshot-out：
+# 一只没恢复身份的空 box 不应对外当 host；只留 exec-daemon 和桌面应答。
 copy_in_flag="$(printf '%s' "${SAND_BOX_STORE_COPY_IN:-}" | tr '[:upper:]' '[:lower:]')"
 copy_in_requested=0
 case "${copy_in_flag}" in
@@ -1293,6 +1344,9 @@ if ensure_real_dir /home/box/chrome-profile/Default; then
 	chown_tree_to_box --shallow --mode 700 /home/box/chrome-profile/Default
 fi
 
+# --- 收尾：supervisor、桌面、自检、内存采样，然后让位 ---
+# supervisor 是第二个生命周期主人（--supervise-owner）。桌面超时只记遥测。
+# doctor 和 memory-watch 失败都不阻止最后的 exec。
 start_in_box_supervisor() {
 	if [ "${SAND_SUPERVISOR_ENABLED:-}" = "1" ] || sand_desktop_supervision_enabled; then
 		if sand_host_uid_split; then
@@ -1421,6 +1475,8 @@ build_sand_exit_watch_args() {
 
 collect_daemon_launcher_args
 
+# exec 成功后，本 bash 的 PID 变成 sand-exit-watch，父进程仍是 pod-daemon。
+# watch 不可用时才退回下面的 wait：那样就没有 subreaper，镜像 daemon 也不会拉起。
 if sand_exit_watch_enabled &&
 	[ -x /usr/local/bin/sand-exit-watch ] &&
 	[ -x /usr/bin/python3 ]; then

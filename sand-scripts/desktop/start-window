@@ -1,4 +1,12 @@
 #!/usr/bin/env bash
+# =============================================================================
+# start-window — 为 :2 及以上再开一块桌面（学习摘录，专有代码）
+#
+# 主屏 :1 由 start-desktop.sh 负责，本脚本遇到屏号 ≤1 直接退出。
+# 每块 fork 屏有自己的 Chrome profile、exec-daemon（14000+屏号）、
+# PTY（13600+屏号）和 VNC（5900+屏号）。浏览器入口仍是 window router :1339，
+# 再由 token 目录把 noVNC :6081 指到这块屏的 VNC。
+# =============================================================================
 set -uo pipefail
 
 DISPLAY_NUM="${1:?display number required}"

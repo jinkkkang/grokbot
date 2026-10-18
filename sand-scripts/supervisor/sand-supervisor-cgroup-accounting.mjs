@@ -1,3 +1,9 @@
+// =============================================================================
+// sand-supervisor-cgroup-accounting.mjs — 读 cgroup v2 的 CPU 账（学习摘录，专有代码）
+//
+// 解析 cpu.stat 与 cpu.pressure，供监督 tick 采样 interactive 组。
+// 组本身由 box-cgroups.sh 创建；这里只读，不写 cgroup.procs。
+// =============================================================================
 import { numberFromEnv } from "./sand-supervisor-contract.mjs";
 
 export const CGROUP_ROOT = process.env.SAND_CGROUP_ROOT ?? "/sys/fs/cgroup";

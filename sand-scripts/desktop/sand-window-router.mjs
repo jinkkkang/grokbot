@@ -1,3 +1,10 @@
+// =============================================================================
+// sand-window-router.mjs — 多屏 exec-daemon 的 HTTP 入口（学习摘录，专有代码）
+//
+// start-sand-box 把它挂在 1339。请求带 x-sand-display / x-sand-window-owner，
+// 主屏转到 1337，fork 屏转到 14000+屏号。token 目录是
+// /tmp/sand-window-tokens.d。这是路由，不是桌面进程本身。
+// =============================================================================
 import http from "node:http";
 import {
   closeSync,

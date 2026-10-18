@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# box-plank — 等合成器选区出现后再启动 dock（学习摘录，专有代码）。
+# 下面的 Python 用 Xlib 看 _NET_WM_CM_S0，最多等 5 秒，避免 Plank 在 picom 之前抢合成。
 set -uo pipefail
 
 python3 - "${DISPLAY:-}" 2>/dev/null <<'PY' || true

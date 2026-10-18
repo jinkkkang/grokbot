@@ -1,4 +1,20 @@
 #!/usr/bin/python3
+# =============================================================================
+# sand-exit-watch — 编排脚本 exec 之后的长期进程（学习摘录，专有代码）
+#
+# start-sand-box 把服务放到后台后 exec 成本脚本，因此它的父进程是 pod-daemon。
+# 它做三件事：
+#   1. prctl(PR_SET_CHILD_SUBREAPER)：收割那些父进程先走了的孤儿，避免僵尸
+#      堆到 tini，也让崩溃信号还能被归类。
+#   2. 盯生命周期主人：--exec-owner（supervise-exec-daemon 的 PID）以及可选的
+#      --supervise-owner（supervise-sand-supervisor 的 PID）。任一退出就
+#      杀掉镜像 daemon 并结束 box。
+#   3. 按 --daemon-launcher SERVICE=PATH 拉起镜像内 daemon（采集现场是 orbitd），
+#      退出后指数退避重启。配置错误（退出码 2 或 78）则保持关闭，不结束 box。
+#
+# 崩溃遥测按 (二进制名, 信号) 在一个时间窗里计数，再追加到 telemetry log。
+# 这不是业务监督器：桌面组件和 exec-daemon 自身的重启分别在 supervise-* 里。
+# =============================================================================
 
 import ctypes
 import errno
@@ -165,6 +181,8 @@ def daemon_supervisor_restart_delay_seconds(attempt: int) -> int:
     )
 
 
+# 把短时间内的同类崩溃合成一条遥测，避免每个 SIGSEGV 都写一行。
+# 窗长默认 60s（SAND_EXIT_WATCH_WINDOW_MS），日志超过 8MiB 后丢弃新记录。
 class CrashWindow:
     def __init__(self, telemetry_log, window_ms):
         self.telemetry_log = telemetry_log
@@ -210,6 +228,9 @@ class CrashWindow:
                 log("crash record append failed: %r" % (error,))
 
 
+# 主循环的状态：主人 PID 集合、每个镜像 daemon 的重启时刻、关机阶段。
+# end_box_for_owner 在有 supervise-owner 时固定退出码 1，与 start-sand-box
+# 的 wait 回退路径同一句日志，方便两边对照。
 class ExitWatch:
     def __init__(
         self,
@@ -593,6 +614,8 @@ def parse_daemon_supervisor_stop_grace_seconds(env):
     )
 
 
+# 入口：成为 subreaper，忽略 SIGINT（避免 Python 把它变成 KeyboardInterrupt
+# 之后又没法传给 pid 1），SIGTERM 只请求停掉镜像 daemon，然后 run()。
 def main():
     arguments = parse_args(sys.argv)
     best_effort_prctl()

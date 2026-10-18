@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# box-xfwm4 — 按 DISPLAY 与 exe 身份清掉旧的窗口管理器再启动（学习摘录，专有代码）。
+# 同一只箱可以有多块屏，不能只凭进程名把别的屏的 xfwm4 杀掉。
 set -uo pipefail
 
 display="${DISPLAY:-}"

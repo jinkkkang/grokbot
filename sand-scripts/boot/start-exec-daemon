@@ -1,4 +1,12 @@
 #!/usr/bin/env bash
+# =============================================================================
+# start-exec-daemon — 一次启动，不负责重启（学习摘录，专有代码）
+#
+# 由 supervise-exec-daemon 反复调用。这里丢掉 gateway / inference / egress
+# token，把 OOM 分数降到 -1000，然后在 /workspace 执行
+# exec-daemon serve：业务端口 1337，PTY WebSocket 1338。
+# 进程退出即回到监督脚本的退避循环。
+# =============================================================================
 set -euo pipefail
 unset SAND_GATEWAY_TOKEN SAND_INFERENCE_RENEWAL_CREDENTIAL SAND_EGRESS_TUNNEL_BEARER
 export CURSOR_AGENT_SOCKET=/tmp/sand-identity.sock
