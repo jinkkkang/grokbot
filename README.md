@@ -8,6 +8,10 @@ This repository (`grokbot`) holds the snapshot at the repository root.
 
 **中文:** 这是 Grok Bot 沙箱虚拟机（Debian 13 / trixie）的脱敏只读快照，用于记录运行环境并便于后续提交到 GitHub。不是整盘镜像。
 
+## Sand scripts / 沙箱脚本
+
+[`sand-scripts/`](sand-scripts/) holds proprietary study extracts from a live Grok Bot box: boot, desktop, supervisor, and utility scripts copied for study. Text only — no binaries, cookies, or secrets. The sysinfo dump at the repository root is unchanged. See [`sand-scripts/README.md`](sand-scripts/README.md).
+
 ## When captured / 采集时间
 
 Captured: 2026-10-18 18:35:26 CST (Asia/Shanghai)
@@ -41,6 +45,7 @@ Kernel: `Linux grok-bot-vm-477963022 6.12.94+ #1 SMP PREEMPT_DYNAMIC Fri Oct 16 
 | `env-sanitized.txt` | Safe env keys only |
 | `SUMMARY.md` | Chinese analysis summary |
 | `REDACTIONS.md` | What was stripped |
+| `sand-scripts/` | Proprietary study extracts from a live Grok Bot box |
 
 ## License / 许可
 
