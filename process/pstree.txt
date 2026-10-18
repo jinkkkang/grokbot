@@ -1,0 +1,749 @@
+tini,1 -- /pod-daemon --ssh-auth-sock-path /run/host-services/ssh-auth.sock --ssh-auth-vsock-port 52
+  |-bamfdaemon-dbus,1175 /usr/libexec/bamf/bamfdaemon-dbus-runner
+  |   `-bamfdaemon,1176
+  |       |-{bamfdaemon},1177
+  |       |-{bamfdaemon},1178
+  |       `-{bamfdaemon},1180
+  |-dbus-daemon,541 --syslog --fork --print-pid 4 --print-address 6 --session
+  |-dconf-service,963
+  |   |-{dconf-service},969
+  |   |-{dconf-service},970
+  |   `-{dconf-service},971
+  `-pod-daemon,7 --ssh-auth-sock-path /run/host-services/ssh-auth.sock --ssh-auth-vsock-port 52
+      |-cursor-agent-st,37718 --backend-mode direct --mount-root /cursor/stores --bcs-endpoint https://api2.cursor.sh--sel
+      |   |-{cursor-agent-st},37769
+      |   |-{cursor-agent-st},37770
+      |   |-{cursor-agent-st},37771
+      |   |-{cursor-agent-st},37772
+      |   |-{cursor-agent-st},37773
+      |   |-{cursor-agent-st},37774
+      |   |-{cursor-agent-st},37775
+      |   |-{cursor-agent-st},37776
+      |   |-{cursor-agent-st},37779
+      |   |-{cursor-agent-st},37782
+      |   |-{cursor-agent-st},37784
+      |   |-{cursor-agent-st},37785
+      |   |-{cursor-agent-st},37786
+      |   |-{cursor-agent-st},37787
+      |   |-{cursor-agent-st},37788
+      |   |-{cursor-agent-st},37789
+      |   |-{cursor-agent-st},37790
+      |   |-{cursor-agent-st},37791
+      |   |-{cursor-agent-st},37792
+      |   |-{cursor-agent-st},37793
+      |   |-{cursor-agent-st},37794
+      |   |-{cursor-agent-st},37795
+      |   |-{cursor-agent-st},37796
+      |   |-{cursor-agent-st},37797
+      |   |-{cursor-agent-st},37798
+      |   |-{cursor-agent-st},37799
+      |   `-{cursor-agent-st},37800
+      |-sand-exit-watch,53 /usr/local/bin/sand-exit-watch --telemetry-log /tmp/sand-box-telemetry.log --exec-owner 338 ...
+      |   |-bamfdaemon-dbus,3265 /usr/libexec/bamf/bamfdaemon-dbus-runner
+      |   |   `-bamfdaemon,3266
+      |   |       |-{bamfdaemon},3267
+      |   |       |-{bamfdaemon},3268
+      |   |       `-{bamfdaemon},3270
+      |   |-bamfdaemon-dbus,13738 /usr/libexec/bamf/bamfdaemon-dbus-runner
+      |   |   `-bamfdaemon,13743
+      |   |       |-{bamfdaemon},13760
+      |   |       |-{bamfdaemon},13761
+      |   |       `-{bamfdaemon},13764
+      |   |-bash,338 /usr/local/bin/supervise-exec-daemon 1337 /usr/local/bin/start-exec-daemon
+      |   |   |-bash,370 /usr/local/bin/start-exec-daemon
+      |   |   |   `-node,373 /exec-daemon/index.js serve --port 1337 --pty-websocket-port 1338 --auth-token local --rg-path ...
+      |   |   |       |-{node},407
+      |   |   |       |-{node},408
+      |   |   |       |-{node},409
+      |   |   |       |-{node},410
+      |   |   |       |-{node},411
+      |   |   |       |-{node},416
+      |   |   |       |-{node},418
+      |   |   |       |-{node},419
+      |   |   |       |-{node},420
+      |   |   |       `-{node},421
+      |   |   `-sleep,39796 2
+      |   |-bash,339 /usr/local/bin/supervise-egress-tunnel 8790 /usr/local/bin/start-egress-tunnel
+      |   |   |-sand-egress-tun,374 server
+      |   |   |   |-{sand-egress-tun},398
+      |   |   |   |-{sand-egress-tun},399
+      |   |   |   |-{sand-egress-tun},400
+      |   |   |   |-{sand-egress-tun},401
+      |   |   |   |-{sand-egress-tun},402
+      |   |   |   |-{sand-egress-tun},403
+      |   |   |   |-{sand-egress-tun},404
+      |   |   |   `-{sand-egress-tun},405
+      |   |   `-sleep,39797 2
+      |   |-bash,456 /usr/local/bin/supervise-sand-supervisor /tmp/sand-supervisor/status.json /tmp/sand-supervisor.log ...
+      |   |   |-bash,470 -c while sleep "$1"; do kill -USR1 "$2" 2>/dev/null || exit 0; done ticker 5 456
+      |   |   |   `-sleep,39782 5
+      |   |   `-node,469 /usr/local/bin/sand-supervisor.mjs
+      |   |       |-node,580 --disable-warning=ExperimentalWarning /opt/sand/sand-host/host-main.cjs
+      |   |       |   |-csnaps,1202
+      |   |       |   |   |-{csnaps},1203
+      |   |       |   |   |-{csnaps},1205
+      |   |       |   |   |-{csnaps},1206
+      |   |       |   |   |-{csnaps},1207
+      |   |       |   |   |-{csnaps},1208
+      |   |       |   |   `-{csnaps},1218
+      |   |       |   |-{node},581
+      |   |       |   |-{node},582
+      |   |       |   |-{node},583
+      |   |       |   |-{node},584
+      |   |       |   |-{node},585
+      |   |       |   |-{node},586
+      |   |       |   |-{node},1197
+      |   |       |   |-{node},1198
+      |   |       |   |-{node},1199
+      |   |       |   |-{node},1200
+      |   |       |   `-{node},1201
+      |   |       |-{node},476
+      |   |       |-{node},477
+      |   |       |-{node},478
+      |   |       |-{node},480
+      |   |       |-{node},481
+      |   |       |-{node},492
+      |   |       |-{node},497
+      |   |       |-{node},498
+      |   |       |-{node},499
+      |   |       `-{node},500
+      |   |-bash,487 /usr/local/bin/start-desktop.sh
+      |   |   |-Xvfb,546 :1 -screen 0 1920x1200x24 -ac +extension GLX +render -noreset
+      |   |   |   |-bash,551 /usr/local/bin/box-bounded-log --run /tmp/xvfb:1.log -- /usr/local/bin/box-xvfb :1 -screen 0 ...
+      |   |   |   |   `-flock,552 -n /tmp/xvfb:1.log.lock /exec-daemon/node /usr/local/bin/box-bounded-log.mjs /tmp/xvfb:1.log ...
+      |   |   |   |       `-node,554 /usr/local/bin/box-bounded-log.mjs /tmp/xvfb:1.log 546
+      |   |   |   |           |-{node},563
+      |   |   |   |           |-{node},564
+      |   |   |   |           |-{node},565
+      |   |   |   |           |-{node},566
+      |   |   |   |           |-{node},567
+      |   |   |   |           |-{node},573
+      |   |   |   |           |-{node},574
+      |   |   |   |           |-{node},575
+      |   |   |   |           |-{node},576
+      |   |   |   |           `-{node},577
+      |   |   |   `-(bash,559)
+      |   |   |-bash,493 /usr/local/bin/box-bounded-log --run /tmp/start-desktop.log -- /usr/local/bin/start-desktop.sh
+      |   |   |   `-flock,494 -n /tmp/start-desktop.log.lock /exec-daemon/node /usr/local/bin/box-bounded-log.mjs ...
+      |   |   |       `-node,495 /usr/local/bin/box-bounded-log.mjs /tmp/start-desktop.log 487
+      |   |   |           |-{node},505
+      |   |   |           |-{node},507
+      |   |   |           |-{node},508
+      |   |   |           |-{node},509
+      |   |   |           |-{node},511
+      |   |   |           |-{node},520
+      |   |   |           |-{node},523
+      |   |   |           |-{node},524
+      |   |   |           |-{node},525
+      |   |   |           `-{node},526
+      |   |   |-picom,904 --backend xrender --no-vsync --no-frame-pacing --no-use-damage
+      |   |   |   `-bash,916 /usr/local/bin/box-bounded-log --run /tmp/picom:1.log -- /usr/local/bin/box-picom --backend ...
+      |   |   |       `-flock,918 -n /tmp/picom:1.log.lock /exec-daemon/node /usr/local/bin/box-bounded-log.mjs ...
+      |   |   |           `-node,920 /usr/local/bin/box-bounded-log.mjs /tmp/picom:1.log 904
+      |   |   |               |-{node},933
+      |   |   |               |-{node},934
+      |   |   |               |-{node},935
+      |   |   |               |-{node},936
+      |   |   |               |-{node},937
+      |   |   |               |-{node},968
+      |   |   |               |-{node},979
+      |   |   |               |-{node},980
+      |   |   |               |-{node},981
+      |   |   |               `-{node},982
+      |   |   |-tail,1163 -f /dev/null
+      |   |   |-websockify,834 /usr/bin/websockify --web=/usr/share/novnc --heartbeat=30 0.0.0.0:6080 localhost:5900
+      |   |   |   `-bash,840 /usr/local/bin/box-bounded-log --run /tmp/novnc:1.log -- websockify --web=/usr/share/novnc ...
+      |   |   |       `-flock,842 -n /tmp/novnc:1.log.lock /exec-daemon/node /usr/local/bin/box-bounded-log.mjs ...
+      |   |   |           `-node,845 /usr/local/bin/box-bounded-log.mjs /tmp/novnc:1.log 834
+      |   |   |               |-{node},851
+      |   |   |               |-{node},852
+      |   |   |               |-{node},853
+      |   |   |               |-{node},854
+      |   |   |               |-{node},855
+      |   |   |               |-{node},888
+      |   |   |               |-{node},898
+      |   |   |               |-{node},900
+      |   |   |               |-{node},901
+      |   |   |               `-{node},902
+      |   |   |-x11vnc,807 -skip_lockkeys -display :1 -localhost -nopw -shared -forever -noxdamage -rfbport 5900 -quiet
+      |   |   |   `-bash,812 /usr/local/bin/box-bounded-log --run /tmp/x11vnc:1.log -- /usr/local/bin/box-x11vnc -display :1 ...
+      |   |   |       `-flock,814 -n /tmp/x11vnc:1.log.lock /exec-daemon/node /usr/local/bin/box-bounded-log.mjs ...
+      |   |   |           `-node,815 /usr/local/bin/box-bounded-log.mjs /tmp/x11vnc:1.log 807
+      |   |   |               |-{node},824
+      |   |   |               |-{node},826
+      |   |   |               |-{node},827
+      |   |   |               |-{node},828
+      |   |   |               |-{node},829
+      |   |   |               |-{node},849
+      |   |   |               |-{node},856
+      |   |   |               |-{node},857
+      |   |   |               |-{node},858
+      |   |   |               `-{node},859
+      |   |   `-xfwm4,861 --compositor=off
+      |   |       |-bash,866 /usr/local/bin/box-bounded-log --run /tmp/xfwm4:1.log -- /usr/local/bin/box-xfwm4 --compositor=off
+      |   |       |   `-flock,867 -n /tmp/xfwm4:1.log.lock /exec-daemon/node /usr/local/bin/box-bounded-log.mjs ...
+      |   |       |       `-node,868 /usr/local/bin/box-bounded-log.mjs /tmp/xfwm4:1.log 861
+      |   |       |           |-{node},878
+      |   |       |           |-{node},880
+      |   |       |           |-{node},881
+      |   |       |           |-{node},882
+      |   |       |           |-{node},883
+      |   |       |           |-{node},911
+      |   |       |           |-{node},922
+      |   |       |           |-{node},923
+      |   |       |           |-{node},924
+      |   |       |           `-{node},925
+      |   |       |-{xfwm4},1172
+      |   |       |-{xfwm4},1228
+      |   |       |-{xfwm4},1229
+      |   |       `-{xfwm4},1230
+      |   |-bash,1839 /usr/local/bin/start-desktop.sh
+      |   |   |-Xvfb,1895 :2 -screen 0 1920x1200x24 -ac +extension GLX +render -noreset
+      |   |   |   |-bash,1900 /usr/local/bin/box-bounded-log --run /tmp/xvfb:2.log -- /usr/local/bin/box-xvfb :2 -screen 0 ...
+      |   |   |   |   `-flock,1901 -n /tmp/xvfb:2.log.lock /exec-daemon/node /usr/local/bin/box-bounded-log.mjs /tmp/xvfb:2.log ...
+      |   |   |   |       `-node,1903 /usr/local/bin/box-bounded-log.mjs /tmp/xvfb:2.log 1895
+      |   |   |   |           |-{node},1915
+      |   |   |   |           |-{node},1916
+      |   |   |   |           |-{node},1917
+      |   |   |   |           |-{node},1918
+      |   |   |   |           |-{node},1919
+      |   |   |   |           |-{node},1929
+      |   |   |   |           |-{node},1937
+      |   |   |   |           |-{node},1938
+      |   |   |   |           |-{node},1939
+      |   |   |   |           `-{node},1940
+      |   |   |   `-(bash,2697)
+      |   |   |-bash,1843 /usr/local/bin/box-bounded-log --run /tmp/sand-window-2/start-desktop.log -- ...
+      |   |   |   `-flock,1844 -n /tmp/sand-window-2/start-desktop.log.lock /exec-daemon/node ...
+      |   |   |       `-node,1845 /usr/local/bin/box-bounded-log.mjs /tmp/sand-window-2/start-desktop.log 1839
+      |   |   |           |-{node},1849
+      |   |   |           |-{node},1850
+      |   |   |           |-{node},1851
+      |   |   |           |-{node},1852
+      |   |   |           |-{node},1853
+      |   |   |           |-{node},1863
+      |   |   |           |-{node},1865
+      |   |   |           |-{node},1866
+      |   |   |           |-{node},1867
+      |   |   |           `-{node},1868
+      |   |   |-picom,2838 --backend xrender --no-vsync --no-frame-pacing --no-use-damage
+      |   |   |   `-bash,2849 /usr/local/bin/box-bounded-log --run /tmp/picom:2.log -- /usr/local/bin/box-picom --backend ...
+      |   |   |       `-flock,2850 -n /tmp/picom:2.log.lock /exec-daemon/node /usr/local/bin/box-bounded-log.mjs ...
+      |   |   |           `-node,2854 /usr/local/bin/box-bounded-log.mjs /tmp/picom:2.log 2838
+      |   |   |               |-{node},2867
+      |   |   |               |-{node},2869
+      |   |   |               |-{node},2870
+      |   |   |               |-{node},2871
+      |   |   |               |-{node},2872
+      |   |   |               |-{node},2905
+      |   |   |               |-{node},2917
+      |   |   |               |-{node},2918
+      |   |   |               |-{node},2919
+      |   |   |               `-{node},2921
+      |   |   |-tail,3147 -f /dev/null
+      |   |   |-x11vnc,2770 -skip_lockkeys -display :2 -localhost -nopw -shared -forever -noxdamage -rfbport 5902 -quiet
+      |   |   |   `-bash,2775 /usr/local/bin/box-bounded-log --run /tmp/x11vnc:2.log -- /usr/local/bin/box-x11vnc -display :2 ...
+      |   |   |       `-flock,2776 -n /tmp/x11vnc:2.log.lock /exec-daemon/node /usr/local/bin/box-bounded-log.mjs ...
+      |   |   |           `-node,2778 /usr/local/bin/box-bounded-log.mjs /tmp/x11vnc:2.log 2770
+      |   |   |               |-{node},2788
+      |   |   |               |-{node},2789
+      |   |   |               |-{node},2790
+      |   |   |               |-{node},2791
+      |   |   |               |-{node},2792
+      |   |   |               |-{node},2828
+      |   |   |               |-{node},2839
+      |   |   |               |-{node},2840
+      |   |   |               |-{node},2841
+      |   |   |               `-{node},2842
+      |   |   `-xfwm4,2799 --compositor=off
+      |   |       |-bash,2806 /usr/local/bin/box-bounded-log --run /tmp/xfwm4:2.log -- /usr/local/bin/box-xfwm4 ...
+      |   |       |   `-flock,2808 -n /tmp/xfwm4:2.log.lock /exec-daemon/node /usr/local/bin/box-bounded-log.mjs ...
+      |   |       |       `-node,2809 /usr/local/bin/box-bounded-log.mjs /tmp/xfwm4:2.log 2799
+      |   |       |           |-{node},2819
+      |   |       |           |-{node},2821
+      |   |       |           |-{node},2822
+      |   |       |           |-{node},2823
+      |   |       |           |-{node},2824
+      |   |       |           |-{node},2858
+      |   |       |           |-{node},2874
+      |   |       |           |-{node},2875
+      |   |       |           |-{node},2876
+      |   |       |           `-{node},2877
+      |   |       |-{xfwm4},3253
+      |   |       |-{xfwm4},3255
+      |   |       |-{xfwm4},3256
+      |   |       `-{xfwm4},3257
+      |   |-bash,11843 /usr/local/bin/start-desktop.sh
+      |   |   |-Xvfb,11893 :3 -screen 0 1920x1200x24 -ac +extension GLX +render -noreset
+      |   |   |   |-bash,11898 /usr/local/bin/box-bounded-log --run /tmp/xvfb:3.log -- /usr/local/bin/box-xvfb :3 -screen 0 ...
+      |   |   |   |   `-flock,11899 -n /tmp/xvfb:3.log.lock /exec-daemon/node /usr/local/bin/box-bounded-log.mjs ...
+      |   |   |   |       `-node,11901 /usr/local/bin/box-bounded-log.mjs /tmp/xvfb:3.log 11893
+      |   |   |   |           |-{node},11913
+      |   |   |   |           |-{node},11914
+      |   |   |   |           |-{node},11915
+      |   |   |   |           |-{node},11916
+      |   |   |   |           |-{node},11917
+      |   |   |   |           |-{node},11925
+      |   |   |   |           |-{node},11932
+      |   |   |   |           |-{node},11933
+      |   |   |   |           |-{node},11934
+      |   |   |   |           `-{node},11935
+      |   |   |   `-(bash,13080)
+      |   |   |-bash,11847 /usr/local/bin/box-bounded-log --run /tmp/sand-window-3/start-desktop.log -- ...
+      |   |   |   `-flock,11848 -n /tmp/sand-window-3/start-desktop.log.lock /exec-daemon/node ...
+      |   |   |       `-node,11849 /usr/local/bin/box-bounded-log.mjs /tmp/sand-window-3/start-desktop.log 11843
+      |   |   |           |-{node},11853
+      |   |   |           |-{node},11854
+      |   |   |           |-{node},11855
+      |   |   |           |-{node},11856
+      |   |   |           |-{node},11857
+      |   |   |           |-{node},11865
+      |   |   |           |-{node},11868
+      |   |   |           |-{node},11869
+      |   |   |           |-{node},11870
+      |   |   |           `-{node},11871
+      |   |   |-picom,13208 --backend xrender --no-vsync --no-frame-pacing --no-use-damage
+      |   |   |   `-bash,13216 /usr/local/bin/box-bounded-log --run /tmp/picom:3.log -- /usr/local/bin/box-picom --backend ...
+      |   |   |       `-flock,13217 -n /tmp/picom:3.log.lock /exec-daemon/node /usr/local/bin/box-bounded-log.mjs ...
+      |   |   |           `-node,13221 /usr/local/bin/box-bounded-log.mjs /tmp/picom:3.log 13208
+      |   |   |               |-{node},13237
+      |   |   |               |-{node},13238
+      |   |   |               |-{node},13239
+      |   |   |               |-{node},13240
+      |   |   |               |-{node},13241
+      |   |   |               |-{node},13267
+      |   |   |               |-{node},13285
+      |   |   |               |-{node},13287
+      |   |   |               |-{node},13288
+      |   |   |               `-{node},13289
+      |   |   |-tail,13524 -f /dev/null
+      |   |   |-x11vnc,13136 -skip_lockkeys -display :3 -localhost -nopw -shared -forever -noxdamage -rfbport 5903 -quiet
+      |   |   |   `-bash,13142 /usr/local/bin/box-bounded-log --run /tmp/x11vnc:3.log -- /usr/local/bin/box-x11vnc -display :3 ...
+      |   |   |       `-flock,13143 -n /tmp/x11vnc:3.log.lock /exec-daemon/node /usr/local/bin/box-bounded-log.mjs ...
+      |   |   |           `-node,13145 /usr/local/bin/box-bounded-log.mjs /tmp/x11vnc:3.log 13136
+      |   |   |               |-{node},13154
+      |   |   |               |-{node},13155
+      |   |   |               |-{node},13156
+      |   |   |               |-{node},13157
+      |   |   |               |-{node},13158
+      |   |   |               |-{node},13182
+      |   |   |               |-{node},13194
+      |   |   |               |-{node},13195
+      |   |   |               |-{node},13196
+      |   |   |               `-{node},13197
+      |   |   `-xfwm4,13161 --compositor=off
+      |   |       |-bash,13168 /usr/local/bin/box-bounded-log --run /tmp/xfwm4:3.log -- /usr/local/bin/box-xfwm4 ...
+      |   |       |   `-flock,13171 -n /tmp/xfwm4:3.log.lock /exec-daemon/node /usr/local/bin/box-bounded-log.mjs ...
+      |   |       |       `-node,13175 /usr/local/bin/box-bounded-log.mjs /tmp/xfwm4:3.log 13161
+      |   |       |           |-{node},13183
+      |   |       |           |-{node},13185
+      |   |       |           |-{node},13186
+      |   |       |           |-{node},13187
+      |   |       |           |-{node},13188
+      |   |       |           |-{node},13220
+      |   |       |           |-{node},13233
+      |   |       |           |-{node},13234
+      |   |       |           |-{node},13235
+      |   |       |           `-{node},13236
+      |   |       |-{xfwm4},13753
+      |   |       |-{xfwm4},13786
+      |   |       |-{xfwm4},13787
+      |   |       `-{xfwm4},13788
+      |   |-chrome,7908
+      |   |   |-bash,7910 /usr/local/bin/box-bounded-log --run /tmp/chrome:2.log -- env -u TZ -u SAND_GATEWAY_TOKEN -u ...
+      |   |   |   `-flock,7911 -n /tmp/chrome:2.log.lock /exec-daemon/node /usr/local/bin/box-bounded-log.mjs /tmp/chrome:2.log ...
+      |   |   |       `-node,7912 /usr/local/bin/box-bounded-log.mjs /tmp/chrome:2.log 7908
+      |   |   |           |-{node},7919
+      |   |   |           |-{node},7920
+      |   |   |           |-{node},7921
+      |   |   |           |-{node},7922
+      |   |   |           |-{node},7923
+      |   |   |           |-{node},7924
+      |   |   |           |-{node},7925
+      |   |   |           |-{node},7926
+      |   |   |           |-{node},7927
+      |   |   |           `-{node},7928
+      |   |   |-cat,7916
+      |   |   |-cat,7917
+      |   |   |-chrome,7937
+      |   |   |   `-chrome,8154
+      |   |   |       |-{chrome},8157
+      |   |   |       |-{chrome},8159
+      |   |   |       |-{chrome},8160
+      |   |   |       |-{chrome},8161
+      |   |   |       |-{chrome},8162
+      |   |   |       |-{chrome},8163
+      |   |   |       |-{chrome},8164
+      |   |   |       |-{chrome},8165
+      |   |   |       |-{chrome},8166
+      |   |   |       |-{chrome},8167
+      |   |   |       |-{chrome},8168
+      |   |   |       |-{chrome},8170
+      |   |   |       |-{chrome},8171
+      |   |   |       |-{chrome},8172
+      |   |   |       |-{chrome},8173
+      |   |   |       |-{chrome},8174
+      |   |   |       |-{chrome},8175
+      |   |   |       |-{chrome},8215
+      |   |   |       |-{chrome},8236
+      |   |   |       `-{chrome},30245
+      |   |   |-chrome,7938
+      |   |   |   |-chrome,8030
+      |   |   |   |   |-{chrome},8031
+      |   |   |   |   |-{chrome},8032
+      |   |   |   |   |-{chrome},8033
+      |   |   |   |   |-{chrome},8034
+      |   |   |   |   |-{chrome},8035
+      |   |   |   |   |-{chrome},8037
+      |   |   |   |   |-{chrome},8041
+      |   |   |   |   `-{chrome},30247
+      |   |   |   |-chrome,8080
+      |   |   |   |   |-{chrome},8081
+      |   |   |   |   |-{chrome},8082
+      |   |   |   |   |-{chrome},8083
+      |   |   |   |   |-{chrome},8084
+      |   |   |   |   |-{chrome},8085
+      |   |   |   |   |-{chrome},8086
+      |   |   |   |   |-{chrome},8120
+      |   |   |   |   |-{chrome},8121
+      |   |   |   |   |-{chrome},8122
+      |   |   |   |   |-{chrome},8136
+      |   |   |   |   `-{chrome},30244
+      |   |   |   |-chrome,8544
+      |   |   |   |   |-{chrome},8545
+      |   |   |   |   |-{chrome},8546
+      |   |   |   |   |-{chrome},8547
+      |   |   |   |   |-{chrome},8548
+      |   |   |   |   |-{chrome},8549
+      |   |   |   |   |-{chrome},8550
+      |   |   |   |   |-{chrome},8551
+      |   |   |   |   |-{chrome},8552
+      |   |   |   |   |-{chrome},8562
+      |   |   |   |   |-{chrome},8563
+      |   |   |   |   |-{chrome},8564
+      |   |   |   |   |-{chrome},8565
+      |   |   |   |   |-{chrome},8566
+      |   |   |   |   `-{chrome},30246
+      |   |   |   |-chrome,8610
+      |   |   |   |   |-{chrome},8611
+      |   |   |   |   |-{chrome},8612
+      |   |   |   |   |-{chrome},8613
+      |   |   |   |   |-{chrome},8614
+      |   |   |   |   |-{chrome},8615
+      |   |   |   |   |-{chrome},8616
+      |   |   |   |   |-{chrome},8617
+      |   |   |   |   |-{chrome},8618
+      |   |   |   |   |-{chrome},8644
+      |   |   |   |   |-{chrome},8645
+      |   |   |   |   |-{chrome},8646
+      |   |   |   |   |-{chrome},9024
+      |   |   |   |   |-{chrome},9025
+      |   |   |   |   `-{chrome},9331
+      |   |   |   |-chrome,8847
+      |   |   |   |   |-{chrome},8848
+      |   |   |   |   |-{chrome},8849
+      |   |   |   |   |-{chrome},8850
+      |   |   |   |   |-{chrome},8851
+      |   |   |   |   |-{chrome},8852
+      |   |   |   |   |-{chrome},8853
+      |   |   |   |   |-{chrome},8854
+      |   |   |   |   |-{chrome},8855
+      |   |   |   |   |-{chrome},8888
+      |   |   |   |   |-{chrome},8889
+      |   |   |   |   |-{chrome},8890
+      |   |   |   |   |-{chrome},8891
+      |   |   |   |   |-{chrome},8892
+      |   |   |   |   |-{chrome},8910
+      |   |   |   |   |-{chrome},8911
+      |   |   |   |   `-{chrome},9287
+      |   |   |   `-chrome,8931
+      |   |   |       |-{chrome},8932
+      |   |   |       |-{chrome},8933
+      |   |   |       |-{chrome},8934
+      |   |   |       |-{chrome},8935
+      |   |   |       |-{chrome},8936
+      |   |   |       |-{chrome},8937
+      |   |   |       |-{chrome},8938
+      |   |   |       |-{chrome},8939
+      |   |   |       `-{chrome},30248
+      |   |   |-chrome,8002
+      |   |   |   |-{chrome},8003
+      |   |   |   |-{chrome},8004
+      |   |   |   |-{chrome},8005
+      |   |   |   |-{chrome},8006
+      |   |   |   |-{chrome},8007
+      |   |   |   |-{chrome},8009
+      |   |   |   |-{chrome},8010
+      |   |   |   |-{chrome},8011
+      |   |   |   |-{chrome},8047
+      |   |   |   `-{chrome},30243
+      |   |   |-{chrome},7936
+      |   |   |-{chrome},7941
+      |   |   |-{chrome},7942
+      |   |   |-{chrome},7943
+      |   |   |-{chrome},7944
+      |   |   |-{chrome},7945
+      |   |   |-{chrome},7946
+      |   |   |-{chrome},7947
+      |   |   |-{chrome},7948
+      |   |   |-{chrome},7949
+      |   |   |-{chrome},7950
+      |   |   |-{chrome},7951
+      |   |   |-{chrome},7990
+      |   |   |-{chrome},7991
+      |   |   |-{chrome},7992
+      |   |   |-{chrome},7993
+      |   |   |-{chrome},7994
+      |   |   |-{chrome},7995
+      |   |   |-{chrome},7996
+      |   |   |-{chrome},7997
+      |   |   |-{chrome},8036
+      |   |   |-{chrome},8038
+      |   |   |-{chrome},8039
+      |   |   |-{chrome},8040
+      |   |   |-{chrome},8043
+      |   |   |-{chrome},8045
+      |   |   |-{chrome},8046
+      |   |   |-{chrome},8052
+      |   |   |-{chrome},8053
+      |   |   |-{chrome},8186
+      |   |   |-{chrome},8187
+      |   |   `-{chrome},8188
+      |   |-chrome_crashpad,7930 --monitor-self --monitor-self-annotation=ptype=crashpad-handler--database=/home/box/.con
+      |   |   |-{chrome_crashpad},7933
+      |   |   `-{chrome_crashpad},7934
+      |   |-chrome_crashpad,7932 --no-periodic-tasks --monitor-self-annotation=ptype=crashpad-handler--database=/home/box
+      |   |   `-{chrome_crashpad},7935
+      |   |-dbus-daemon,1890 --syslog --fork --print-pid 4 --print-address 6 --session
+      |   |-dbus-daemon,11888 --syslog --fork --print-pid 4 --print-address 6 --session
+      |   |-dconf-service,2903
+      |   |   |-{dconf-service},2909
+      |   |   |-{dconf-service},2910
+      |   |   `-{dconf-service},2914
+      |   |-dconf-service,13265
+      |   |   |-{dconf-service},13272
+      |   |   |-{dconf-service},13273
+      |   |   `-{dconf-service},13277
+      |   |-node,227 /usr/local/bin/sand-window-router.mjs 1339 1337 14000
+      |   |   |-{node},240
+      |   |   |-{node},241
+      |   |   |-{node},242
+      |   |   |-{node},243
+      |   |   |-{node},244
+      |   |   |-{node},269
+      |   |   |-{node},280
+      |   |   |-{node},282
+      |   |   |-{node},284
+      |   |   `-{node},285
+      |   |-node,248 /usr/local/bin/sand-session-sync.mjs
+      |   |   |-{node},261
+      |   |   |-{node},262
+      |   |   |-{node},263
+      |   |   |-{node},264
+      |   |   |-{node},265
+      |   |   |-{node},293
+      |   |   |-{node},318
+      |   |   |-{node},319
+      |   |   |-{node},320
+      |   |   `-{node},321
+      |   |-node,249 /usr/local/bin/sand-web-bot-auth.mjs
+      |   |   |-bash,255 /usr/local/bin/box-bounded-log --run /tmp/sand-web-bot-auth.log -- /exec-daemon/node ...
+      |   |   |   `-flock,257 -n /tmp/sand-web-bot-auth.log.lock /exec-daemon/node /usr/local/bin/box-bounded-log.mjs ...
+      |   |   |       `-node,260 /usr/local/bin/box-bounded-log.mjs /tmp/sand-web-bot-auth.log 249
+      |   |   |           |-{node},273
+      |   |   |           |-{node},274
+      |   |   |           |-{node},275
+      |   |   |           |-{node},276
+      |   |   |           |-{node},277
+      |   |   |           |-{node},308
+      |   |   |           |-{node},331
+      |   |   |           |-{node},332
+      |   |   |           |-{node},333
+      |   |   |           `-{node},334
+      |   |   |-{node},266
+      |   |   |-{node},267
+      |   |   |-{node},268
+      |   |   |-{node},270
+      |   |   |-{node},271
+      |   |   |-{node},292
+      |   |   |-{node},309
+      |   |   |-{node},310
+      |   |   |-{node},311
+      |   |   `-{node},312
+      |   |-node,287 /usr/local/bin/sand-ua-governor.mjs
+      |   |   |-bash,295 /usr/local/bin/box-bounded-log --run /tmp/sand-ua-governor.log -- /exec-daemon/node ...
+      |   |   |   `-flock,298 -n /tmp/sand-ua-governor.log.lock /exec-daemon/node /usr/local/bin/box-bounded-log.mjs ...
+      |   |   |       `-node,300 /usr/local/bin/box-bounded-log.mjs /tmp/sand-ua-governor.log 287
+      |   |   |           |-{node},313
+      |   |   |           |-{node},314
+      |   |   |           |-{node},315
+      |   |   |           |-{node},316
+      |   |   |           |-{node},317
+      |   |   |           |-{node},342
+      |   |   |           |-{node},353
+      |   |   |           |-{node},354
+      |   |   |           |-{node},355
+      |   |   |           `-{node},356
+      |   |   |-{node},323
+      |   |   |-{node},327
+      |   |   |-{node},328
+      |   |   |-{node},329
+      |   |   |-{node},330
+      |   |   |-{node},362
+      |   |   |-{node},375
+      |   |   |-{node},380
+      |   |   |-{node},381
+      |   |   `-{node},382
+      |   |-node,337 /usr/local/bin/sand-cookie-persist.mjs
+      |   |   |-{node},352
+      |   |   |-{node},358
+      |   |   |-{node},359
+      |   |   |-{node},360
+      |   |   |-{node},361
+      |   |   |-{node},389
+      |   |   |-{node},391
+      |   |   |-{node},392
+      |   |   |-{node},393
+      |   |   `-{node},394
+      |   |-node,2707 /exec-daemon/index.js serve --port 14002 --pty-websocket-port 13602 --auth-token local --rg-path ...
+      |   |   |-{node},2713
+      |   |   |-{node},2714
+      |   |   |-{node},2715
+      |   |   |-{node},2716
+      |   |   |-{node},2717
+      |   |   |-{node},2718
+      |   |   |-{node},2759
+      |   |   |-{node},2760
+      |   |   |-{node},2761
+      |   |   `-{node},2762
+      |   |-node,13124 /exec-daemon/index.js serve --port 14003 --pty-websocket-port 13603 --auth-token local --rg-path ...
+      |   |   |-bash,39798 -O extglob -c...
+      |   |   |   `-bash,39806 -O extglob -c...
+      |   |   |       `-pstree,39807 -ap
+      |   |   |-{node},13130
+      |   |   |-{node},13131
+      |   |   |-{node},13132
+      |   |   |-{node},13133
+      |   |   |-{node},13134
+      |   |   |-{node},13135
+      |   |   |-{node},13452
+      |   |   |-{node},13453
+      |   |   |-{node},13454
+      |   |   `-{node},13455
+      |   |-plank,1140 --name dock1
+      |   |   |-bash,1147 /usr/local/bin/box-bounded-log --run /tmp/plank:1-dock1.log -- /usr/local/bin/box-plank --name dock1
+      |   |   |   `-flock,1148 -n /tmp/plank:1-dock1.log.lock /exec-daemon/node /usr/local/bin/box-bounded-log.mjs ...
+      |   |   |       `-node,1149 /usr/local/bin/box-bounded-log.mjs /tmp/plank:1-dock1.log 1140
+      |   |   |           |-{node},1155
+      |   |   |           |-{node},1156
+      |   |   |           |-{node},1157
+      |   |   |           |-{node},1158
+      |   |   |           |-{node},1159
+      |   |   |           |-{node},1164
+      |   |   |           |-{node},1165
+      |   |   |           |-{node},1166
+      |   |   |           |-{node},1167
+      |   |   |           `-{node},1168
+      |   |   |-{plank},1169
+      |   |   |-{plank},1170
+      |   |   |-{plank},1171
+      |   |   `-{plank},1173
+      |   |-plank,3102 --name dock1
+      |   |   |-bash,3113 /usr/local/bin/box-bounded-log --run /tmp/plank:2-dock1.log -- /usr/local/bin/box-plank --name dock1
+      |   |   |   `-flock,3114 -n /tmp/plank:2-dock1.log.lock /exec-daemon/node /usr/local/bin/box-bounded-log.mjs ...
+      |   |   |       `-node,3117 /usr/local/bin/box-bounded-log.mjs /tmp/plank:2-dock1.log 3102
+      |   |   |           |-{node},3131
+      |   |   |           |-{node},3134
+      |   |   |           |-{node},3135
+      |   |   |           |-{node},3136
+      |   |   |           |-{node},3137
+      |   |   |           |-{node},3177
+      |   |   |           |-{node},3193
+      |   |   |           |-{node},3194
+      |   |   |           |-{node},3195
+      |   |   |           `-{node},3196
+      |   |   |-{plank},3205
+      |   |   |-{plank},3206
+      |   |   |-{plank},3209
+      |   |   |-{plank},3254
+      |   |   `-{plank},6352
+      |   |-plank,13480 --name dock1
+      |   |   |-bash,13491 /usr/local/bin/box-bounded-log --run /tmp/plank:3-dock1.log -- /usr/local/bin/box-plank --name dock1
+      |   |   |   `-flock,13493 -n /tmp/plank:3-dock1.log.lock /exec-daemon/node /usr/local/bin/box-bounded-log.mjs ...
+      |   |   |       `-node,13495 /usr/local/bin/box-bounded-log.mjs /tmp/plank:3-dock1.log 13480
+      |   |   |           |-{node},13511
+      |   |   |           |-{node},13512
+      |   |   |           |-{node},13513
+      |   |   |           |-{node},13514
+      |   |   |           |-{node},13515
+      |   |   |           |-{node},13533
+      |   |   |           |-{node},13540
+      |   |   |           |-{node},13541
+      |   |   |           |-{node},13542
+      |   |   |           `-{node},13543
+      |   |   |-{plank},13559
+      |   |   |-{plank},13560
+      |   |   |-{plank},13561
+      |   |   |-{plank},13705
+      |   |   `-{plank},13888
+      |   |-sand-daemon-sup,637 run orbitd
+      |   |   |-bash,639 /usr/local/bin/box-bounded-log --run /tmp/sand-orbitd.log -- env -i...
+      |   |   |   `-flock,641 -n /tmp/sand-orbitd.log.lock /exec-daemon/node /usr/local/bin/box-bounded-log.mjs ...
+      |   |   |       `-node,643 /usr/local/bin/box-bounded-log.mjs /tmp/sand-orbitd.log 637
+      |   |   |           |-{node},646
+      |   |   |           |-{node},651
+      |   |   |           |-{node},652
+      |   |   |           |-{node},653
+      |   |   |           |-{node},654
+      |   |   |           |-{node},658
+      |   |   |           |-{node},659
+      |   |   |           |-{node},660
+      |   |   |           |-{node},661
+      |   |   |           `-{node},662
+      |   |   `-sand-daemon-sup,655 __supervise orbitd
+      |   |       `-orbitd,1237
+      |   |           |-{orbitd},1238
+      |   |           |-{orbitd},1239
+      |   |           |-{orbitd},1240
+      |   |           |-{orbitd},1241
+      |   |           |-{orbitd},1242
+      |   |           |-{orbitd},1243
+      |   |           |-{orbitd},1244
+      |   |           `-{orbitd},1245
+      |   |-sand-memory-wat,616 /usr/local/bin/sand-memory-watch --telemetry-log /tmp/sand-box-telemetry.log
+      |   |-websockify,204 /usr/bin/websockify --web=/usr/share/novnc --heartbeat=30 --token-plugin TokenFile --token-source...
+      |   |   |-bash,209 /usr/local/bin/box-bounded-log --run /tmp/novnc-forks.log -- /usr/bin/websockify ...
+      |   |   |   `-flock,210 -n /tmp/novnc-forks.log.lock /exec-daemon/node /usr/local/bin/box-bounded-log.mjs ...
+      |   |   |       `-node,211 /usr/local/bin/box-bounded-log.mjs /tmp/novnc-forks.log 204
+      |   |   |           |-{node},212
+      |   |   |           |-{node},213
+      |   |   |           |-{node},214
+      |   |   |           |-{node},215
+      |   |   |           |-{node},216
+      |   |   |           |-{node},246
+      |   |   |           |-{node},278
+      |   |   |           |-{node},279
+      |   |   |           |-{node},281
+      |   |   |           `-{node},283
+      |   |   `-websockify,36186 /usr/bin/websockify --web=/usr/share/novnc --heartbeat=30 --token-plugin TokenFile ...
+      |   |-xfce4-terminal,6354
+      |   |   |-bash,6368
+      |   |   |-{xfce4-terminal},6357
+      |   |   |-{xfce4-terminal},6358
+      |   |   |-{xfce4-terminal},6359
+      |   |   `-{xfce4-terminal},6367
+      |   `-xfce4-terminal,13890
+      |       |-bash,13897
+      |       |-{xfce4-terminal},13892
+      |       |-{xfce4-terminal},13893
+      |       |-{xfce4-terminal},13894
+      |       `-{xfce4-terminal},13896
+      |-{pod-daemon},8
+      |-{pod-daemon},9
+      |-{pod-daemon},10
+      |-{pod-daemon},11
+      |-{pod-daemon},12
+      |-{pod-daemon},13
+      |-{pod-daemon},14
+      |-{pod-daemon},15
+      `-{pod-daemon},36011

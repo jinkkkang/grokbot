@@ -1,0 +1,142 @@
+=== file ===
+--: line 35: file: command not found
+
+=== sha256 ===
+c5b0666b4cb676901f90dfcb37106783c5fe2077b04590973b885950611b30ee  /tini
+438be2eef1059fd69cbefc3ab8607af5c48f731a7ab8e47ed5a850c941adb080  /pod-daemon
+a8227a0872a91f9b17fc484569f79977f2ecdff0afaed999253b15a91f574102  /usr/local/bin/sand-exit-watch
+c7c859095a97a734c85e4edeab32792e026a0072bb1b9fc5952a546d1a8f4f0d  /usr/local/bin/start-sand-box
+
+=== tini version ===
+tini version 0.19.0 - git.de40ad0
+The MIT License (MIT)
+
+Copyright (c) 2015 Thomas Orozco <thomas@orozco.fr>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+
+=== sand-exit-watch head (first 40 lines) ===
+#!/usr/bin/python3
+
+import ctypes
+import errno
+import json
+import os
+import re
+import signal
+import subprocess
+import sys
+import time
+from dataclasses import dataclass
+from enum import Enum, auto
+
+WINDOW_MS_ENV = "SAND_EXIT_WATCH_WINDOW_MS"
+DEFAULT_WINDOW_MS = 60_000
+MAX_COUNT_PER_SIGNATURE = 10_000
+MAX_TELEMETRY_LOG_BYTES = 8 * 1024 * 1024
+
+DAEMON_SUPERVISOR_STOP_GRACE_SECONDS_ENV = (
+    "SAND_EXIT_WATCH_DAEMON_SUPERVISOR_STOP_GRACE_SECONDS"
+)
+DEFAULT_DAEMON_SUPERVISOR_STOP_GRACE_SECONDS = 50
+DAEMON_SUPERVISOR_RESTART_INITIAL_SECONDS = 1
+DAEMON_SUPERVISOR_RESTART_MAXIMUM_SECONDS = 60
+DAEMON_SUPERVISOR_RESTART_RESET_SECONDS = 10 * 60
+IDLE_WAIT_SECONDS = 1.0
+
+CONFIGURATION_ERROR_EXIT_CODE = 78
+USAGE_ERROR_EXIT_CODE = 2
+PERMANENT_LAUNCH_ERRNOS = frozenset((errno.EACCES, errno.ENOENT, errno.ENOEXEC))
+SERVICE_PATTERN = re.compile(r"^[a-z][a-z0-9-]{0,31}$")
+USAGE = (
+    "usage: sand-exit-watch --telemetry-log PATH --exec-owner PID "
+    "[--supervise-owner PID] [--daemon-launcher SERVICE=PATH]..."
+)
+
+KNOWN_BINARIES = frozenset(
+    [
+        "cursor",
+
+=== start-sand-box head (first 60 lines) ===
+#!/usr/bin/env bash
+set -uo pipefail
+
+export DISPLAY="${DISPLAY:-:1}"
+export SAND_BOX_BOOT_STARTED_AT_MS="${SAND_BOX_BOOT_STARTED_AT_MS:-$(date +%s%3N)}"
+if [ -z "${SAND_BOX_BOOT_ID:-}" ]; then
+	if [ -r /proc/sys/kernel/random/uuid ]; then
+		SAND_BOX_BOOT_ID="$(cat /proc/sys/kernel/random/uuid)"
+	else
+		SAND_BOX_BOOT_ID="${SAND_BOX_BOOT_STARTED_AT_MS}-$$"
+	fi
+	export SAND_BOX_BOOT_ID
+fi
+export SAND_BOX_TELEMETRY_LOG="${SAND_BOX_TELEMETRY_LOG:-/tmp/sand-box-telemetry.log}"
+
+# >>> box port table (from sand/src/shared/box/box-contract.ts; regenerate: pnpm --filter sand run gen:box-ports) >>>
+SAND_BOX_PORT_PRIMARY_EXEC_DAEMON=1337
+SAND_BOX_PORT_WINDOW_ROUTER=1339
+SAND_BOX_PORT_FORK_NOVNC=6081
+SAND_BOX_PORT_EGRESS_TUNNEL_WS=8790
+SAND_BOX_PORT_EGRESS_CONNECT_PROXY=8791
+SAND_BOX_FORK_EXEC_BASE=14000
+WINDOW_TOKEN_DIR="/tmp/sand-window-tokens.d"
+NOVNC_TOKEN_DIR="/tmp/sand-novnc-tokens.d"
+SAND_BOX_WEBAUTHN_PROXY_CREDENTIAL_DIR="/run/sand-webauthn-proxy"
+# <<< box port table <<<
+
+emit_boot_stage() {
+	local stage="$1"
+	local now_ms duration_ms
+	now_ms="$(date +%s%3N)"
+	duration_ms=$((now_ms - SAND_BOX_BOOT_STARTED_AT_MS))
+	if [ "${duration_ms}" -lt 0 ]; then
+		duration_ms=0
+	fi
+	printf '{"kind":"boot_stage","stage":"%s","durationMs":%s}\n' \
+		"${stage}" "${duration_ms}" >>"${SAND_BOX_TELEMETRY_LOG}"
+}
+
+emit_boot_failure() {
+	local stage="$1"
+	local reason="$2"
+	local now_ms duration_ms
+	now_ms="$(date +%s%3N)"
+	duration_ms=$((now_ms - SAND_BOX_BOOT_STARTED_AT_MS))
+	if [ "${duration_ms}" -lt 0 ]; then
+		duration_ms=0
+	fi
+	printf '{"kind":"boot_failure","stage":"%s","reason":"%s","durationMs":%s}\n' \
+		"${stage}" "${reason}" "${duration_ms}" >>"${SAND_BOX_TELEMETRY_LOG}"
+}
+
+emit_boot_stage "entrypoint_started"
+
+SAND_BOX_CGROUPS_LIB="${SAND_BOX_CGROUPS_LIB:-/usr/local/bin/box-cgroups.sh}"
+if [ -r "${SAND_BOX_CGROUPS_LIB}" ]; then
+	# shellcheck source=/dev/null
+	. "${SAND_BOX_CGROUPS_LIB}"
+fi
+if ! command -v sand_cgroup_setup >/dev/null 2>&1; then
+
+=== verified hashes at capture ===
+c5b0666b4cb676901f90dfcb37106783c5fe2077b04590973b885950611b30ee  /tini
+438be2eef1059fd69cbefc3ab8607af5c48f731a7ab8e47ed5a850c941adb080  /pod-daemon
+a8227a0872a91f9b17fc484569f79977f2ecdff0afaed999253b15a91f574102  /usr/local/bin/sand-exit-watch
+c7c859095a97a734c85e4edeab32792e026a0072bb1b9fc5952a546d1a8f4f0d  /usr/local/bin/start-sand-box
+tini: tini version 0.19.0 - git.de40ad0

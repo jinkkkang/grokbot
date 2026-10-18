@@ -1,0 +1,1 @@
+console=ttyS0 root=/dev/vda random.trust_cpu=on ip=172.30.0.2::172.30.0.1:255.255.255.0::eth0:off rw loglevel=7 earlyprintk=ttyS0 print-fatal-signals=1 systemd.unified_cgroup_hierarchy=1 systemd.setenv=SWAP_SIZE_MB=0 reboot=k panic=1 nomodule i8042.noaux=1 i8042.nomux=1 i8042.dumbkbd=1 clocksource=kvm-clock tsc=unstable nosoftlockup root=/dev/vda rw

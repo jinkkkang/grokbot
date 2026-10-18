@@ -1,0 +1,4 @@
+Filesystem     Type      Size  Used Avail Use% Mounted on
+/dev/vdb       ext4      125G  5.0G  121G   4% /
+devtmpfs       devtmpfs  7.9G     0  7.9G   0% /dev
+shm            tmpfs     7.9G     0  7.9G   0% /dev/shm

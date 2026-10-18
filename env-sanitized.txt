@@ -1,0 +1,12 @@
+# Sanitized environment snapshot
+# Deliberately NOT dumping /proc/*/environ (may contain tokens).
+# Only non-secret shell/process identity keys:
+USER=box
+HOME=/home/box
+SHELL=/bin/bash
+LANG=C.UTF-8
+PWD=/workspace
+PATH length: 56 chars (value omitted if long)
+PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
+TERM=dumb
+TZ=Asia/Shanghai

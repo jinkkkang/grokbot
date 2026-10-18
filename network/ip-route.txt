@@ -1,0 +1,3 @@
+default via 172.30.0.1 dev enp0s4 
+172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1 linkdown 
+172.30.0.0/24 dev enp0s4 proto kernel scope link src 172.30.0.2 
