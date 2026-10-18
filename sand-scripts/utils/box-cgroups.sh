@@ -1,4 +1,19 @@
 # shellcheck shell=bash
+# =============================================================================
+# box-cgroups.sh — 被 source 的 cgroup v2 辅助库（学习摘录，专有代码）
+#
+# start-sand-box 在启动早期 source 它，supervise-exec-daemon 和
+# start-desktop.sh 也会 source，用来把自己放进对应组。
+#
+# 三个叶子，都只动 cpu 权重，不设硬上限：
+#   interactive  桌面、noVNC、window router（前台手感）
+#   agent        exec-daemon
+#   background   镜像 daemon（orbitd）的前提；没建成就保持那些 daemon 关闭
+# 控制器不可用、cgroup 是 threaded（开发机常见）、或建不出叶子目录时，
+# setup 记一行日志后返回；place/join 因目录不存在而是空操作。
+# box 照常启动，只是不做 CPU 分区。
+# sand_cgroup_place 把已有 PID 写进 cgroup.procs；sand_cgroup_join 放自己。
+# =============================================================================
 
 SAND_CGROUP_ROOT="${SAND_CGROUP_ROOT:-/sys/fs/cgroup}"
 SAND_CGROUP_INTERACTIVE_NAME="interactive"

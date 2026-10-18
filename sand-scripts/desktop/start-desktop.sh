@@ -1,4 +1,19 @@
 #!/usr/bin/env bash
+# =============================================================================
+# start-desktop.sh — 主桌面 :1 的会话（学习摘录，专有代码）
+#
+# 由 start-sand-box 经 box-bounded-log 放进后台，日志在 /tmp/start-desktop.log。
+# 顺序是有依赖的，不能对调：
+#   1. 从环境里抹掉 gateway / egress token（桌面进程不应带着它们）
+#   2. ensure-machine-id，否则 Chrome 的设备标识会坏
+#   3. 会话 D-Bus（root 时另给用户 box 开一条，地址写到 xdg-runtime）
+#   4. box-xvfb，等到 xdpyinfo 成功；失败则本脚本退出
+#   5. 壁纸 → box-x11vnc（localhost:5900）→ 无 token 时 websockify :6080
+#   6. box-xfwm4（先关自带合成）→ box-picom → Plank dock
+# 每个组件都经 sand_desktop_register 留下重启规格，供 sand-supervisor 使用。
+# 最后 tail -f /dev/null：会话进程必须活着，监督器才知道这套桌面还在。
+# 屏大小默认 1280x800，与 exec-daemon 的 computer-use 尺寸同一契约。
+# =============================================================================
 set -euo pipefail
 
 scrub_gateway_token_env() {
@@ -96,6 +111,9 @@ fi
 
 rm -f /tmp/xdg-runtime-box/sand-gateway-credential /tmp/xdg-runtime-box-*/sand-gateway-credential || true
 
+# --- X 服务器 ---
+# box-xvfb 会先清掉同屏号的旧锁和仍占着 abstract socket 的进程。
+# 显示没起来就退出：后面的 VNC / 窗口管理器没有 X 没有意义。
 /usr/local/bin/box-bounded-log --run "/tmp/xvfb${DISPLAY}.log" -- \
 	/usr/local/bin/box-xvfb "${DISPLAY}" -screen 0 "${SCREEN_WIDTH}x${SCREEN_HEIGHT}x24" -ac +extension GLX +render -noreset &
 sand_desktop_register "${SAND_DESKTOP_GROUP}" xvfb 0 "/tmp/xvfb${DISPLAY}.log" "$!" -- \
@@ -125,6 +143,9 @@ else
 		|| true
 fi
 
+# --- 把这张 X 画面送出去 ---
+# x11vnc 只听 localhost。没有 SAND_NOVNC_TOKEN 时本脚本自己起 websockify
+# 把 6080 接到该 VNC；有 token 时改由 fork 那路（6081 + token 目录）接入。
 X11VNC_ARGS=(
 	-display "${DISPLAY}"
 	-localhost
@@ -160,6 +181,9 @@ else
 		websockify "${WEBSOCKIFY_ARGS[@]}"
 fi
 
+# --- 窗口管理与合成 ---
+# xfwm4 关掉自带合成，合成交给 picom（xrender，不适配 vsync）。
+# 等到 _NET_SUPPORTING_WM_CHECK 再起 picom / dock，避免 dock 抢在窗口管理器前面。
 /usr/local/bin/box-bounded-log --run "/tmp/xfwm4${DISPLAY}.log" -- \
 	/usr/local/bin/box-xfwm4 --compositor=off &
 sand_desktop_register "${SAND_DESKTOP_GROUP}" xfwm4 1 "/tmp/xfwm4${DISPLAY}.log" "$!" -- \

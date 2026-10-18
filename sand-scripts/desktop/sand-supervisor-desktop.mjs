@@ -1,3 +1,10 @@
+// =============================================================================
+// sand-supervisor-desktop.mjs — 桌面组件的重启策略（学习摘录，专有代码）
+//
+// 被 sand-supervisor.mjs 继承。读 /tmp/sand-desktop 里 sand_desktop_register
+// 写下的规格，决定一个组件是继续、重启还是停。重拉时从环境里去掉 gateway token。
+// 健康快照写给 host 角色（SAND_SUPERVISOR_DESKTOP_HEALTH_PATH）看。
+// =============================================================================
 import {
   existsSync,
   fstatSync,

@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# box-picom — 清掉同一 DISPLAY 上的旧 picom 再启动（学习摘录，专有代码）。
+# 合成器同时开两份会抢 _NET_WM_CM_S0。start-desktop.sh 在 xfwm4 就绪后才调用它。
 set -uo pipefail
 
 display="${DISPLAY:-}"

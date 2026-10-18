@@ -1,3 +1,5 @@
+// 生成文件，学习摘录。端口与屏号基数的对照表；脚本里的字面量和这里应一致。
+// 本仓库没有上游生成器，不要手改数字去「同步」——以本文件为准阅读即可。
 // @generated SignedSource<<db515b3b5969a9459e1fe301b6e21068cf9d003813426dd9ca367713a1a36c55>>
 // Emitted by scripts/gen-box-contract.mts from sand/src/shared/box/box-contract.ts;
 // regenerate with `pnpm --filter sand run gen:box-contract`.

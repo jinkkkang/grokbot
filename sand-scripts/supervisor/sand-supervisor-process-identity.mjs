@@ -1,3 +1,9 @@
+// =============================================================================
+// sand-supervisor-process-identity.mjs — 确认监听者是不是预期进程（学习摘录，专有代码）
+//
+// 端口上有人时，用 /proc/<pid>/cmdline 对照期望 argv，避免把别人的进程当成
+// 自己的 host 或桌面组件杀掉。PID 复用时还要看进程是否仍活着。
+// =============================================================================
 import { readFileSync, readdirSync, readlinkSync } from "node:fs";
 import { join } from "node:path";
 import { DESKTOP_COMPOSITOR_NAME, DESKTOP_DOCK_COMMS } from "./sand-supervisor-contract.mjs";

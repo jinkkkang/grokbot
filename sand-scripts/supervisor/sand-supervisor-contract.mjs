@@ -1,3 +1,10 @@
+// =============================================================================
+// sand-supervisor-contract.mjs — 监督进程的路径与角色契约（学习摘录，专有代码）
+//
+// 集中放目录（/tmp/sand-supervisor、/opt/sand）、角色 host|desktop、
+// 以及 IMAGE_OWNED_SCRIPT_NAMES：这些脚本属于镜像，host bundle 同步时不许覆盖。
+// supervisorRole() 为空表示一份进程兼管 host 和桌面。
+// =============================================================================
 import { readdirSync } from "node:fs";
 
 const SUPERVISOR_ENTRY_NAME = "sand-supervisor.mjs";

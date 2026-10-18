@@ -1,4 +1,16 @@
 #!/usr/bin/env bash
+# =============================================================================
+# supervise-egress-tunnel — 出口隧道的重启循环（学习摘录，专有代码）
+#
+# 用法：supervise-egress-tunnel <ws_port> <launcher> [参数...]
+# 默认 ws_port=8790，launcher=start-egress-tunnel（里面 exec sand-egress-tunnel）。
+# 仅当 SAND_EGRESS_TUNNEL_ENABLED=1 时由 start-sand-box 拉起。
+#
+# 循环与 supervise-exec-daemon 同一形状：清掉占端口的旧进程、setsid 拉起、
+# 看端口、30 秒启动超时、听上之后连续 3 次看不到就重来、退避封顶 30 秒。
+# 差别是事件写 kind=egress_tunnel，并且本进程不是生命周期主人
+# （uid split 时外层还有 start-sand-box 自己的一层重启）。
+# =============================================================================
 set -uo pipefail
 
 if [ "$#" -lt 2 ]; then

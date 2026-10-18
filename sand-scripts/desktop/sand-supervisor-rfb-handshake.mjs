@@ -1,3 +1,9 @@
+// =============================================================================
+// sand-supervisor-rfb-handshake.mjs — 判断 fork 窗口的 VNC 链断在哪（学习摘录，专有代码）
+//
+// 做一次最短的 RFB 握手。WebSocket（6081 + token）通就是整链健康；
+// 不通再探 TCP VNC，从而区分「websockify 坏了」和「x11vnc 坏了」。
+// =============================================================================
 const RFB_BANNER_LENGTH = 12;
 const RFB_SERVER_INIT_HEADER_LENGTH = 24;
 

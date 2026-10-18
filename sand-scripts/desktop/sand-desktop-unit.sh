@@ -1,4 +1,10 @@
 # shellcheck shell=bash
+# =============================================================================
+# sand-desktop-unit.sh — 按一块屏找出该停的进程（学习摘录，专有代码）
+#
+# 被 start-window / stop-window source。用 Chrome 的 user-data-dir 和
+# 命令行里的 DISPLAY 收集这一套桌面的 pid，再统一发信号。主屏 :1 不从这里停。
+# =============================================================================
 
 SAND_DESKTOP_UNIT_PROC_ROOT="${SAND_DESKTOP_UNIT_PROC_ROOT:-/proc}"
 SAND_DESKTOP_UNIT_TERM_WAIT_TENTHS="${SAND_DESKTOP_UNIT_TERM_WAIT_TENTHS:-30}"

@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# box-xvfb — 启动 Xvfb 之前清掉同屏号的残留（学习摘录，专有代码）。
+# 删 /tmp 锁文件关不掉仍活着的 abstract socket，所以要按 socket 找到旧进程再 exec。
 # Removing X lock/socket paths does not close a live server's abstract socket. https://man7.org/linux/man-pages/man7/unix.7.html
 set -uo pipefail
 
