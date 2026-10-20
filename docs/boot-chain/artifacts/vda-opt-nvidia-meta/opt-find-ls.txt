@@ -1,0 +1,20 @@
+       15      4 drwxr-xr-x   4 root     root         4096 Jul 29 06:01 /mnt/vda/opt
+     7807      4 drwxr-xr-x   4 root     root         4096 Jul 29 06:01 /mnt/vda/opt/nvidia
+     7808      4 drwxr-xr-x   2 root     root         4096 Jul 29 06:01 /mnt/vda/opt/nvidia/bin
+     7809   1204 -rwxr-xr-x   1 root     root      1230464 Sep 23  2025 /mnt/vda/opt/nvidia/bin/nvidia-smi
+     7810      4 drwxr-xr-x   2 root     root         4096 Jul 29 06:01 /mnt/vda/opt/nvidia/lib
+     7822      0 lrwxrwxrwx   1 root     root           26 Sep 23  2025 /mnt/vda/opt/nvidia/lib/libnvidia-cfg.so.1 -> libnvidia-cfg.so.580.95.05
+     7814      0 lrwxrwxrwx   1 root     root           32 Sep 23  2025 /mnt/vda/opt/nvidia/lib/libnvidia-allocator.so.1 -> libnvidia-allocator.so.580.95.05
+     7815      0 lrwxrwxrwx   1 root     root           20 Sep 23  2025 /mnt/vda/opt/nvidia/lib/libcuda.so.1 -> libcuda.so.580.95.05
+     7812    164 -rw-r--r--   1 root     root       164936 Sep 23  2025 /mnt/vda/opt/nvidia/lib/libnvidia-allocator.so.580.95.05
+     7819  94020 -rw-r--r--   1 root     root     96276264 Sep 23  2025 /mnt/vda/opt/nvidia/lib/libcuda.so.580.95.05
+     7816      0 lrwxrwxrwx   1 root     root           27 Sep 23  2025 /mnt/vda/opt/nvidia/lib/libnvidia-nvvm.so.4 -> libnvidia-nvvm.so.580.95.05
+     7820      0 lrwxrwxrwx   1 root     root           37 Sep 23  2025 /mnt/vda/opt/nvidia/lib/libnvidia-ptxjitcompiler.so.1 -> libnvidia-ptxjitcompiler.so.580.95.05
+     7813    388 -rw-r--r--   1 root     root       395352 Sep 23  2025 /mnt/vda/opt/nvidia/lib/libnvidia-cfg.so.580.95.05
+     7823  38500 -rw-r--r--   1 root     root     39422584 Sep 23  2025 /mnt/vda/opt/nvidia/lib/libnvidia-ptxjitcompiler.so.580.95.05
+     7818   2232 -rw-r--r--   1 root     root      2283608 Sep 23  2025 /mnt/vda/opt/nvidia/lib/libnvidia-ml.so.580.95.05
+     7817      0 lrwxrwxrwx   1 root     root           25 Sep 23  2025 /mnt/vda/opt/nvidia/lib/libnvidia-ml.so.1 -> libnvidia-ml.so.580.95.05
+     7821  76280 -rw-r--r--   1 root     root     78109032 Sep 23  2025 /mnt/vda/opt/nvidia/lib/libnvidia-nvvm.so.580.95.05
+     7811  70568 -rw-r--r--   1 root     root     72261240 Sep 23  2025 /mnt/vda/opt/nvidia/lib/libnvidia-gpucomp.so.580.95.05
+     7824      0 lrwxrwxrwx   1 root     root           12 Sep 23  2025 /mnt/vda/opt/nvidia/lib/libcuda.so -> libcuda.so.1
+       16      4 drwx--x--x   4 root     root         4096 Oct 16 08:51 /mnt/vda/opt/containerd

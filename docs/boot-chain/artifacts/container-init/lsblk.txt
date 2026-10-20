@@ -1,0 +1,3 @@
+NAME FSTYPE FSVER LABEL UUID FSAVAIL FSUSE% MOUNTPOINTS
+vda                           118.1G     1% /mnt/vda
+vdb                           117.8G     6% /

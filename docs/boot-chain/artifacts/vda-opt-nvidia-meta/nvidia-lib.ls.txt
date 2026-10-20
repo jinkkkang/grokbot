@@ -1,0 +1,17 @@
+total 282160
+drwxr-xr-x. 2 root root     4096 Jul 29 06:01 .
+drwxr-xr-x. 4 root root     4096 Jul 29 06:01 ..
+lrwxrwxrwx. 1 root root       12 Sep 23  2025 libcuda.so -> libcuda.so.1
+lrwxrwxrwx. 1 root root       20 Sep 23  2025 libcuda.so.1 -> libcuda.so.580.95.05
+-rw-r--r--. 1 root root 96276264 Sep 23  2025 libcuda.so.580.95.05
+lrwxrwxrwx. 1 root root       32 Sep 23  2025 libnvidia-allocator.so.1 -> libnvidia-allocator.so.580.95.05
+-rw-r--r--. 1 root root   164936 Sep 23  2025 libnvidia-allocator.so.580.95.05
+lrwxrwxrwx. 1 root root       26 Sep 23  2025 libnvidia-cfg.so.1 -> libnvidia-cfg.so.580.95.05
+-rw-r--r--. 1 root root   395352 Sep 23  2025 libnvidia-cfg.so.580.95.05
+-rw-r--r--. 1 root root 72261240 Sep 23  2025 libnvidia-gpucomp.so.580.95.05
+lrwxrwxrwx. 1 root root       25 Sep 23  2025 libnvidia-ml.so.1 -> libnvidia-ml.so.580.95.05
+-rw-r--r--. 1 root root  2283608 Sep 23  2025 libnvidia-ml.so.580.95.05
+lrwxrwxrwx. 1 root root       27 Sep 23  2025 libnvidia-nvvm.so.4 -> libnvidia-nvvm.so.580.95.05
+-rw-r--r--. 1 root root 78109032 Sep 23  2025 libnvidia-nvvm.so.580.95.05
+lrwxrwxrwx. 1 root root       37 Sep 23  2025 libnvidia-ptxjitcompiler.so.1 -> libnvidia-ptxjitcompiler.so.580.95.05
+-rw-r--r--. 1 root root 39422584 Sep 23  2025 libnvidia-ptxjitcompiler.so.580.95.05

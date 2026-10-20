@@ -1,0 +1,2 @@
+-rwxr-xr-x 1 root root 20336480 Oct 18 16:10 /pod-daemon
+-rwxr-xr-x 1 root root   870496 Oct 18 16:10 /tini

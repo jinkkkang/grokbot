@@ -1,0 +1,7 @@
+# Firecracker rootfs / isod build identity. Loaded by isod at process start.
+commit=5a6eda56ad88e83520c0fe05e00af251ccf56737
+commit_short=5a6eda56ad88
+generation=141355
+built_at_unix=1792111808
+branch=main
+cargo_version=0.1.0

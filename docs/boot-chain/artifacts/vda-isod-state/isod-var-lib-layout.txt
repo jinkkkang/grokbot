@@ -1,0 +1,10 @@
+   133779      4 drwxr-xr-x   4 root     root         4096 Oct 18 16:10 /mnt/vda/var/lib/isod
+   133803      4 drwxr-xr-x   3 root     root         4096 Oct 20 17:05 /mnt/vda/var/lib/isod/runc-state
+   133827      4 drwx--x--x   2 root     root         4096 Oct 18 16:10 /mnt/vda/var/lib/isod/runc-state/pod-nzlapxyzlvdmnjzu6uf6mcaaly-02fe127a
+   133829      8 -rw-------   1 root     root         7013 Oct 18 16:10 /mnt/vda/var/lib/isod/runc-state/pod-nzlapxyzlvdmnjzu6uf6mcaaly-02fe127a/state.json
+   133804      4 drwxr-xr-x   3 root     root         4096 Oct 18 16:10 /mnt/vda/var/lib/isod/containers
+   133808      4 drwxr-xr-x   4 root     root         4096 Oct 18 16:10 /mnt/vda/var/lib/isod/containers/pod-nzlapxyzlvdmnjzu6uf6mcaaly-02fe127a
+   133809      4 drwxr-xr-x   3 root     root         4096 Oct 18 16:10 /mnt/vda/var/lib/isod/containers/pod-nzlapxyzlvdmnjzu6uf6mcaaly-02fe127a/image
+   133810      4 drwxr-xr-x   2 root     root         4096 Oct 18 16:10 /mnt/vda/var/lib/isod/containers/pod-nzlapxyzlvdmnjzu6uf6mcaaly-02fe127a/image/rootfs
+   133811      4 drwxr-xr-x   2 root     root         4096 Oct 18 16:10 /mnt/vda/var/lib/isod/containers/pod-nzlapxyzlvdmnjzu6uf6mcaaly-02fe127a/bundle
+   133812     12 -rw-r--r--   1 root     root         8501 Oct 18 16:10 /mnt/vda/var/lib/isod/containers/pod-nzlapxyzlvdmnjzu6uf6mcaaly-02fe127a/bundle/config.json

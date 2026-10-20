@@ -1,0 +1,21 @@
+[Unit]
+Description=Load NVIDIA GPU modules and create device nodes
+Documentation=https://github.com/anysphere/everysphere/tree/main/anyrun/kernel#nvidia-gpu-driver-bundle
+After=systemd-modules-load.service
+# Intentionally NOT ordered Before=docker.service and NOT depending on
+# systemd-udev-settle: GPU init must never gate the VM's Docker/boot. A slow or
+# hung modprobe (e.g. on an undersized VM) or a udev-settle stall here would
+# otherwise delay dockerd past the runner's "wait for Docker" window and fail
+# pod startup. The /dev/nvidia* nodes are created well before any workload
+# container is created (which only happens after the image pull), so running this
+# concurrently with Docker is safe.
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/nvidia-gpu-setup.sh
+RemainAfterExit=yes
+# Bound the unit so a hung modprobe can never leave boot waiting on it.
+TimeoutStartSec=30
+
+[Install]
+WantedBy=multi-user.target

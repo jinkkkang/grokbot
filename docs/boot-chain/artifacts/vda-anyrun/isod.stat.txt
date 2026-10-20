@@ -1,0 +1,8 @@
+  File: /mnt/vda/usr/local/bin/isod
+  Size: 30414768  	Blocks: 59408      IO Block: 4096   regular file
+Device: 254,0	Inode: 41          Links: 1
+Access: (0755/-rwxr-xr-x)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2026-10-20 09:43:13.314190515 +0800
+Modify: 2026-10-16 02:55:34.000000000 +0800
+Change: 2026-10-16 08:51:37.193319689 +0800
+ Birth: 2026-10-16 08:51:37.175024817 +0800

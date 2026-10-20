@@ -1,0 +1,12 @@
+total 59328
+drwxr-xr-x.  2 root root     4096 Oct 16 03:21 .
+drwxr-xr-x. 10 root root     4096 Oct  5 08:00 ..
+-rwxr-xr-x.  1 root root     2125 Oct 15 22:52 eth0-routes
+-rwxr-xr-x.  1 root root   927160 Oct 15 22:53 fsck.erofs
+-rwxr-xr-x.  1 root root 30414768 Oct 16 02:55 isod
+-rwxr-xr-x.  1 root root  1022136 Oct 15 22:53 mkfs.erofs
+-rwxr-xr-x.  1 root root     2979 Oct 15 22:52 nvidia-gpu-setup.sh
+-rwxr-xr-x.  1 root root 19534104 Oct 16 02:55 pod-daemon
+-rwxr-xr-x.  1 root root     3149 Oct 15 22:52 setup-swap.sh
+-rwxr-xr-x.  1 root root   870496 Oct 16 02:55 tini
+-rwxr-xr-x.  1 root root  7946424 Oct 15 22:54 umoci

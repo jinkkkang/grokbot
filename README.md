@@ -1,10 +1,10 @@
 # Grok Bot Debian 沙箱学习指南
 
-本仓库是一台 **Grok Bot** 沙箱虚拟机的学习材料：仓库根目录是 **2026-10-18** 采集的脱敏系统快照（`sysinfo`），[`sand-scripts/`](sand-scripts/) 是从同一类沙箱里摘出的启动与监督脚本。两份材料放在一起，用来回答「机器怎么起来、每个脚本在干什么」。
+本仓库是一台 **Grok Bot** 沙箱的学习材料：仓库根目录是 **2026-10-18** 在容器内采集的脱敏系统快照（`sysinfo`），[`sand-scripts/`](sand-scripts/) 是容器里的启动与监督脚本，[`docs/boot-chain/`](docs/boot-chain/BOOT-CHAIN-FULL.md) 是客户机底座从 Firecracker 到 isod、runc 的启动链和原始 unit。三份材料放在一起，用来回答「机器怎么起来、每个脚本在干什么」。
 
 这是 **学习摘录**，不是官方发行版，也 **不构成再分发许可**。脚本属于 Anysphere / Cursor 的 sand 运行时，专有代码。本仓库与 Anysphere / Cursor 无隶属关系。快照里没有密钥、cookie、grant 文件，也没有放进任何二进制。
 
-采集时刻：`2026-10-18 18:35:26 CST`。主机名 `grok-bot-vm-477963022`。系统 Debian 13（trixie），内核 `6.12.94+`。
+采集时刻：`2026-10-18 18:35:26 CST`。主机名 `grok-bot-vm-477963022`。容器内是 Debian 13（trixie），内核 `6.12.94+`。底座是 Debian 12。
 
 ---
 
@@ -12,32 +12,53 @@
 
 按这个顺序，可以从「这是什么机器」读到「某一行脚本为什么存在」：
 
-1. **本页的架构总览和端口表。** 先建立启动链和名词，再翻文件。
-2. **[`SUMMARY.md`](SUMMARY.md)。** 中文结论：这是 KVM 客户机，不是容器；cmdline 与当前根不一致的原因；谁真正拉起业务进程。
-3. **[`process/boot-chain-verify.txt`](process/boot-chain-verify.txt)** 和 **[`process/classification.md`](process/classification.md)。** 采集当时的进程树，用来核对文档，而不是当成永远不变的现场。
-4. **[`disk/root-vda-vs-vdb.txt`](disk/root-vda-vs-vdb.txt)** 配 **[`virt/dmesg-root-disk.txt`](virt/dmesg-root-disk.txt)。** 只在你要搞清根盘时读。
-5. **[`sand-scripts/README.md`](sand-scripts/README.md)。** 启动时序图、四个子目录、`supervise-*` 和 `start-*` 怎么配合。
-6. **按调用顺序读脚本：** [`start-sand-box`](sand-scripts/boot/start-sand-box) → [`sand-exit-watch`](sand-scripts/boot/sand-exit-watch) → 某一个 `supervise-*` → 它包住的 `start-*`。桌面单独看 [`start-desktop.sh`](sand-scripts/desktop/start-desktop.sh)。
-7. **端口对不上号时回到本页的端口表**，再打开 [`sand-scripts/utils/box-contract.generated.mjs`](sand-scripts/utils/box-contract.generated.mjs)。那份生成文件是端口的权威对照，脚本里的数字应当和它一致。
+1. **本页的架构总览和端口表。** 先建立容器内的启动链和名词，再翻文件。
+2. **[`docs/boot-chain/BOOT-CHAIN-FULL.md`](docs/boot-chain/BOOT-CHAIN-FULL.md)。** 客户机怎么从 Firecracker 走到 systemd、isod、runc，再进入本页描述的容器。原始 unit、脚本和脱敏 OCI/runc state 在 [`docs/boot-chain/artifacts/`](docs/boot-chain/artifacts/)。
+3. **[`SUMMARY.md`](SUMMARY.md)。** 中文结论：采集点在 KVM 客户机内部的 runc 容器里；cmdline 与当前根不一致的原因；谁真正拉起业务进程。
+4. **[`process/boot-chain-verify.txt`](process/boot-chain-verify.txt)** 和 **[`process/classification.md`](process/classification.md)。** 采集当时的进程树，用来核对文档，而不是当成永远不变的现场。
+5. **[`disk/root-vda-vs-vdb.txt`](disk/root-vda-vs-vdb.txt)** 配 **[`virt/dmesg-root-disk.txt`](virt/dmesg-root-disk.txt)。** 只在你要搞清根盘时读。机制以启动链全文第 3、5 节为准。
+6. **[`sand-scripts/README.md`](sand-scripts/README.md)。** 容器内启动时序图、四个子目录、`supervise-*` 和 `start-*` 怎么配合。
+7. **按调用顺序读脚本：** [`start-sand-box`](sand-scripts/boot/start-sand-box) → [`sand-exit-watch`](sand-scripts/boot/sand-exit-watch) → 某一个 `supervise-*` → 它包住的 `start-*`。桌面单独看 [`start-desktop.sh`](sand-scripts/desktop/start-desktop.sh)。
+8. **端口对不上号时回到本页的端口表**，再打开 [`sand-scripts/utils/box-contract.generated.mjs`](sand-scripts/utils/box-contract.generated.mjs)。那份生成文件是端口的权威对照，脚本里的数字应当和它一致。
 
 脚本顶部的中文块注释解释「这一段为什么存在」。原有英文注释保留，逻辑没有改写。
 
 ---
 
+## 底座启动链（Firecracker → isod → runc）
+
+本页其余部分是在 **容器里面** 看到的。容器的 `/` 是 `/dev/vdb`，容器的 PID 1 是 `tini`。客户机本身还有一层：Firecracker 把 Debian 12 底座挂在 `/dev/vda` 上，那里的 PID 1 是 **systemd**。
+
+完整叙事、流程图和证据索引在 [`docs/boot-chain/BOOT-CHAIN-FULL.md`](docs/boot-chain/BOOT-CHAIN-FULL.md)。原始 unit、底座脚本、isod 的 hash / `--help` / RPC 列表、脱敏 OCI 与 runc state、容器内脚本原文，在 [`docs/boot-chain/artifacts/`](docs/boot-chain/artifacts/)。
+
+| 本仓库已经记下来的现象 | 底座侧对应 |
+|------------------------|------------|
+| cmdline 仍是 `root=/dev/vda`，`df` 的 `/` 是 vdb | 内核挂的是底座。vdb 成为 `/` 发生在 **runc 的容器 mount namespace**（`pivot_root`）。客户机上的 systemd 仍以 vda 为根 |
+| 容器 PID 1 = `tini` → `pod-daemon` | 客户机 PID 1 = systemd。tini 是容器 init，由 isod 调 runc 拉起 |
+| `ss` 看到 **2375**、**50052**、**26500**，进程列为空 | 容器与底座共享网络命名空间。2375 是 `docker-socat`，50052 是 `isod`，26500 与 `pod-daemon` 的默认 gRPC 地址一致（本实例 argv 没有 `--listen-addr`） |
+
+isod、pod-daemon、NVIDIA 用户态 `.so` 没有进仓库，只有 hash、`--help`、unit 和脚本。OCI 里的 token 写成 `<redacted>`。[`sand-scripts/`](sand-scripts/) 仍是带中文注释的阅读版；[`docs/boot-chain/artifacts/container-scripts/`](docs/boot-chain/artifacts/container-scripts/) 是其中一部分脚本的原文。
+
+---
+
 ## 架构总览
 
-沙箱是 **KVM 客户机**。PID 1 是 `tini`，它只负责拉起 **一个** 子进程、转发信号、收尸。业务服务不是 tini 枚举出来的。
+下面这张图是 **容器内部**。沙箱跑在 KVM 客户机里。容器 PID 1 是 `tini`，它只负责拉起 **一个** 子进程、转发信号、收尸。业务服务不是 tini 枚举出来的。客户机底座的 systemd / isod / runc 见上一节。
 
 ```text
-内核
-  按 cmdline 把 /dev/vda 挂成初始根
-  随后挂上 /dev/vdb，用户态切根，当前 / 来自 vdb
+客户机（Firecracker）
+  systemd 为 PID 1，根是 /dev/vda
+  isod 调 runc，在新 mount namespace 里 pivot_root
         │
         ▼
-tini                         PID 1，init。只 exec /pod-daemon
+容器
+  / 来自 /dev/vdb
         │
         ▼
-pod-daemon                   沙箱运行时。宿主机经它创建进程
+tini                         容器 PID 1。只 exec /pod-daemon
+        │
+        ▼
+pod-daemon                   沙箱运行时。由它创建容器内进程
         │
         ├── start-sand-box   一次性编排。准备目录、身份、cgroup，fork 各服务
         │         │
@@ -70,20 +91,23 @@ pod-daemon                   沙箱运行时。宿主机经它创建进程
 
 1. 内核按 cmdline 把 **`/dev/vda`** 挂成初始根。dmesg：`VFS: Mounted root ... on device 254:0`（vda 的主次设备号）。
 2. 随后 **`/dev/vdb`** 以另一套 UUID 挂上（`EXT4-fs (vdb): mounted`）。
-3. 用户态切根之后，`findmnt /` 和 `df` 的 `/` 都是 vdb。`/proc/cmdline` 是启动参数快照，不会被改写，所以仍写 `root=/dev/vda`。
+3. runc 在容器 mount namespace 里切根之后，容器内 `findmnt /` 和 `df` 的 `/` 都是 vdb。`/proc/cmdline` 是启动参数快照，不会被改写，所以仍写 `root=/dev/vda`。
 4. `/etc/fstab` 是 `UNCONFIGURED FSTAB`，不是 fstab 把根指到 vdb。两块盘都是 128GiB virtio 盘，UUID 不同，不是同一个文件系统的两个名字。
-5. 采集时 `blkid` 不在 PATH，[`disk/blkid.txt`](disk/blkid.txt) 为空；UUID 以 dmesg 摘录为准。
+5. 采集时 `blkid` 不在 PATH，[`disk/blkid.txt`](disk/blkid.txt) 为空；UUID 以 dmesg 摘录为准。底座侧补全的 UUID 见 [`docs/boot-chain/BOOT-CHAIN-FULL.md`](docs/boot-chain/BOOT-CHAIN-FULL.md) 第 5 节。
+
+这五条是容器内能直接核对的现象。切根的执行者是底座上的 **runc**（`no_pivot_root: false`），范围是新建的 mount namespace。客户机 systemd 的根一直是 vda；分析时把 vda 再挂进容器，挂载点是 `/mnt/vda`。
 
 ---
 
 ## 目录地图
 
-仓库只有两棵树，职责不要混：
+仓库有三棵树，职责不要混：
 
 | 树 | 是什么 | 怎么用 |
 |----|--------|--------|
-| **仓库根（sysinfo）** | 某一时刻的只读命令输出：进程、磁盘、网络、包列表 | 核对「当时机器长什么样」。会过期 |
-| **[`sand-scripts/`](sand-scripts/)** | 从 `/usr/local/bin`（以及一处 libexec）抄出的文本脚本 | 读「代码打算怎么启动」。路径在沙箱里是 `/usr/local/bin/...`，在本仓库里多了一层 `sand-scripts/<子目录>/` |
+| **仓库根（sysinfo）** | 某一时刻的只读命令输出：进程、磁盘、网络、包列表。采集点在容器内 | 核对「当时容器里长什么样」。会过期 |
+| **[`sand-scripts/`](sand-scripts/)** | 从 `/usr/local/bin`（以及一处 libexec）抄出的文本脚本，加了中文注释 | 读「代码打算怎么启动」。路径在沙箱里是 `/usr/local/bin/...`，在本仓库里多了一层 `sand-scripts/<子目录>/` |
+| **[`docs/boot-chain/`](docs/boot-chain/BOOT-CHAIN-FULL.md)** | 客户机底座启动链，加上 unit、底座脚本、脱敏 OCI / runc state | 先读全文，再按第 8 节进 [`artifacts/`](docs/boot-chain/artifacts/) |
 
 根上的 [`MANIFEST.txt`](MANIFEST.txt) 只覆盖 sysinfo，**不含** `sand-scripts/`。脚本树自己的清单是 [`sand-scripts/MANIFEST.txt`](sand-scripts/MANIFEST.txt)（注释写明生成时的 size/sha256；本指南往脚本里加了中文注释之后，那些哈希不再等于工作区）。
 
@@ -137,13 +161,13 @@ pod-daemon                   沙箱运行时。宿主机经它创建进程
 | **14000+N** | fork exec-daemon | `start-window` 为该屏另起一份 | 看到 14002、14003 |
 | **13600+N** | fork PTY WebSocket | 同上 | 看到 13602、13603 |
 
-另外：`pod-daemon` 的命令行带 `--ssh-auth-vsock-port 52`，那是 vsock，不是上表里的 TCP。采集时 `ss` 还看到 **2375**、**50052**、**26500** 在听，但没有打出进程名，本仓库不猜测它们是谁。
+另外：`pod-daemon` 的命令行带 `--ssh-auth-vsock-port 52`，那是 vsock，不是上表里的 TCP。采集时 `ss` 还看到 **2375**、**50052**、**26500**，进程列为空。底座材料把它们对上了：2375 是 `docker-socat` 把 docker.sock 转到 TCP，50052 是 `isod`，26500 是 `pod-daemon` 的默认 gRPC 地址。容器和底座共享网络命名空间，所以容器内的 `ss` 听得到底座上的端口。见 [`docs/boot-chain/BOOT-CHAIN-FULL.md`](docs/boot-chain/BOOT-CHAIN-FULL.md)。
 
 ---
 
 ## 全文件清单
 
-每个当前入库文件一行。sysinfo 是命令输出；`sand-scripts/` 是可阅读的脚本。
+下面每个 sysinfo 与 `sand-scripts/` 文件一行。`docs/boot-chain/` 不逐条列入，目录职责见 [`docs/boot-chain/BOOT-CHAIN-FULL.md`](docs/boot-chain/BOOT-CHAIN-FULL.md) 第 8 节。
 
 ### 根目录与系统快照
 
@@ -253,7 +277,7 @@ pod-daemon                   沙箱运行时。宿主机经它创建进程
 | `sand-scripts/utils/box-doctor` | 开机自检：machine-id、Chrome、出口、时钟、D-Bus、Xvfb/VNC/noVNC/合成器 |
 | `sand-scripts/utils/ensure-machine-id` | 保证 `/etc/machine-id` 是 32 位小写十六进制，并与 D-Bus 那份对齐 |
 
-上表 78 行，与当前 `git ls-tree` 的文件数一致。
+上表覆盖 sysinfo 与 `sand-scripts/`（写这份指南时与当时 `git ls-tree` 的 78 个文件一致）。`docs/boot-chain/` 是后来补上的底座链路，不重复进这张表。
 
 ---
 
@@ -261,15 +285,17 @@ pod-daemon                   沙箱运行时。宿主机经它创建进程
 
 - 进程列表和监听端口是采集瞬间。多开的 Chrome / fork 窗口会改变 5900+N、14000+N 和 CDP 端口。
 - 未采集 `/proc/*/environ`、pod grant、浏览器配置里的秘密。见 [`REDACTIONS.md`](REDACTIONS.md)。
-- `pod-daemon`、`exec-daemon`、`sand-egress-tunnel`、`orbitd` 本体不在本仓库，只有启动它们的脚本。
+- `pod-daemon`、`exec-daemon`、`sand-egress-tunnel`、`orbitd`、`isod` 本体不在本仓库。底座侧补充了 hash、`--help`、unit 和脱敏 JSON，见 [`docs/boot-chain/artifacts/`](docs/boot-chain/artifacts/)。
 - 根目录 [`MANIFEST.txt`](MANIFEST.txt) 与 [`sand-scripts/MANIFEST.txt`](sand-scripts/MANIFEST.txt) 是摘录时的清单，不是本指南改注释之后的哈希。
 
 ---
 
 ## English (secondary)
 
-This repo is a study snapshot of a Grok Bot Debian 13 KVM sandbox plus the text scripts that boot it. It is a proprietary study extract, not an open-source release and not an Anysphere/Cursor product drop.
+This repo is a study snapshot of a Grok Bot sandbox: a Debian 13 root inside a runc container, on a Debian 12 Firecracker guest, plus the text scripts that boot the container. It is a proprietary study extract, not an open-source release and not an Anysphere/Cursor product drop.
 
-Boot chain: the kernel mounts `/dev/vda` first, userland then switches the visible root to `/dev/vdb` (`/proc/cmdline` keeps the original `root=`). PID 1 is `tini`, which runs only `/pod-daemon`. The pod daemon starts `start-sand-box`. That script prepares users, cgroups, and directories, forks long-running services, and **execs** `sand-exit-watch`. The exit watch is a Python subreaper: it reaps children, restarts image daemons such as orbitd, and ends the box when the exec-daemon supervisor (and, when enabled, the sand-supervisor supervisor) exits.
+The guest is a Firecracker microVM. Its real PID 1 is systemd on a Debian 12 root (`/dev/vda`). `isod` (`0.0.0.0:50052`) hydrates a rootfs and asks `runc` 1.3.6 to `pivot_root` into a container whose root is `/dev/vdb`. Inside that container, PID 1 is `tini`, which runs only `/pod-daemon`. The pod daemon starts `start-sand-box`. That script prepares users, cgroups, and directories, forks long-running services, and **execs** `sand-exit-watch`. The exit watch is a Python subreaper: it reaps children, restarts image daemons such as orbitd, and ends the box when the exec-daemon supervisor (and, when enabled, the sand-supervisor supervisor) exits.
 
-Read [`sand-scripts/README.md`](sand-scripts/README.md) for the sequence diagram. The file table above is the inventory of every path in the tree. Ports 1337/1338 are the primary exec daemon, 1339 the window router, 5900/6080 the primary VNC/noVNC pair, 6081 fork noVNC, 8790/8791 the egress tunnel, 14000+N and 13600+N fork exec/PTY, 9222+display Chrome CDP.
+The full chain, with units and redacted OCI/runc state, is [`docs/boot-chain/BOOT-CHAIN-FULL.md`](docs/boot-chain/BOOT-CHAIN-FULL.md). Raw artifacts live in [`docs/boot-chain/artifacts/`](docs/boot-chain/artifacts/). Listeners **2375**, **50052**, and **26500** are docker-socat, isod, and pod-daemon's default gRPC address; the container shares the guest network namespace, which is why `ss` inside the container sees them.
+
+Read [`sand-scripts/README.md`](sand-scripts/README.md) for the in-container sequence diagram. The file table above inventories the sysinfo snapshot and `sand-scripts/`; `docs/boot-chain/` is listed in the boot-chain doc. Ports 1337/1338 are the primary exec daemon, 1339 the window router, 5900/6080 the primary VNC/noVNC pair, 6081 fork noVNC, 8790/8791 the egress tunnel, 14000+N and 13600+N fork exec/PTY, 9222+display Chrome CDP.
