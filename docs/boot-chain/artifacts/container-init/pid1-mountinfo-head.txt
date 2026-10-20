@@ -1,0 +1,5 @@
+193 166 254:16 / / rw,relatime - ext4 /dev/vdb rw
+194 193 0:46 / /proc rw,relatime - proc proc rw
+195 193 0:6 / /dev rw,relatime - devtmpfs devtmpfs rw,size=8191116k,nr_inodes=2047779,mode=755
+196 195 0:23 / /dev/shm rw,nosuid,nodev - tmpfs tmpfs rw
+197 195 0:24 / /dev/pts rw,nosuid,noexec,relatime - devpts devpts rw,gid=5,mode=620,ptmxmode=000

@@ -1,0 +1,21 @@
+[Unit]
+Description=Isolation Daemon (isod) for managing containers via gRPC
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/isod --listen-addr 0.0.0.0:50052 --base-dir /var/lib/isod
+Restart=always
+RestartSec=5
+# Restart must not SIGKILL runc supervisors / workload cgroups. isod rebuilds
+# its process-local maps from runc + disk + mountinfo on the next start.
+KillMode=process
+Delegate=yes
+OOMScoreAdjust=-500
+StandardOutput=journal
+StandardError=journal
+Environment="RUST_LOG=info"
+
+[Install]
+WantedBy=multi-user.target

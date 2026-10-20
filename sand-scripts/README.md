@@ -4,7 +4,7 @@
 
 用途是学习：box 怎样从 `start-sand-box` 走到各个长期服务。代码属于 **Anysphere / Cursor sand** 运行时，是专有学习摘录，不是官方发布，也不构成再分发许可。本目录与 Anysphere / Cursor 无隶属关系。没有二进制、cookie 或密钥。
 
-系统快照（进程、磁盘、端口现场）在仓库根目录，见 [`../README.md`](../README.md)。
+系统快照（进程、磁盘、端口现场）在仓库根目录，见 [`../README.md`](../README.md)。这些脚本跑在 runc 容器里面。客户机底座（systemd → isod → runc）在 [`../docs/boot-chain/BOOT-CHAIN-FULL.md`](../docs/boot-chain/BOOT-CHAIN-FULL.md)；同名脚本的无注释原文在 [`../docs/boot-chain/artifacts/container-scripts/`](../docs/boot-chain/artifacts/container-scripts/)。
 
 ---
 

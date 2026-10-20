@@ -1,0 +1,10 @@
+isod/src/build_info.rs
+isod/src/container_manager.rs
+isod/src/extra_drives.rs
+isod/src/kmsg.rs
+isod/src/main.rs
+isod/src/memory.rs
+isod/src/mountinfo.rs
+isod/src/root_dir.rs
+isod/src/rootar_hydrate.rs
+isod/src/service.rs

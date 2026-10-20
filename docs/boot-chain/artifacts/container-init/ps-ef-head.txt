@@ -1,0 +1,40 @@
+UID          PID    PPID  C STIME TTY          TIME CMD
+root           1       0  0 09:06 ?        00:00:01 /tini -- /pod-daemon --ssh-auth-sock-path /run/host-services/ssh-auth.sock --ssh-auth-vsock-port 52
+root           7       1  0 09:06 ?        00:00:48 /pod-daemon --ssh-auth-sock-path /run/host-services/ssh-auth.sock --ssh-auth-vsock-port 52
+root          53       7  0 09:06 ?        00:00:07 /usr/bin/python3 /usr/local/bin/sand-exit-watch --telemetry-log /tmp/sand-box-telemetry.log --exec-owner 338 --supervise-owner 456 --daemon-launcher orbitd=/usr/local/libexec/sand/orbitd/start
+box          204      53  0 09:06 ?        00:00:33 /usr/bin/python3 /usr/bin/websockify --web=/usr/share/novnc --heartbeat=30 --token-plugin TokenFile --token-source /tmp/sand-novnc-tokens.d 0.0.0.0:6081
+box          209     204  0 09:06 ?        00:00:00 bash /usr/local/bin/box-bounded-log --run /tmp/novnc-forks.log -- /usr/bin/websockify --web=/usr/share/novnc --heartbeat=30 --token-plugin TokenFile --token-source /tmp/sand-novnc-tokens.d 0.0.0.0:6081
+box          210     209  0 09:06 ?        00:00:00 flock -n /tmp/novnc-forks.log.lock /exec-daemon/node /usr/local/bin/box-bounded-log.mjs /tmp/novnc-forks.log 204
+box          211     210  0 09:06 ?        00:00:13 /exec-daemon/node /usr/local/bin/box-bounded-log.mjs /tmp/novnc-forks.log 204
+box          227      53  0 09:06 ?        00:00:08 /exec-daemon/node /usr/local/bin/sand-window-router.mjs 1339 1337 14000
+box          248      53  0 09:06 ?        00:01:42 /exec-daemon/node /usr/local/bin/sand-session-sync.mjs
+box          249      53  1 09:06 ?        00:05:22 /exec-daemon/node /usr/local/bin/sand-web-bot-auth.mjs
+box          255     249  0 09:06 ?        00:00:00 bash /usr/local/bin/box-bounded-log --run /tmp/sand-web-bot-auth.log -- /exec-daemon/node /usr/local/bin/sand-web-bot-auth.mjs
+box          257     255  0 09:06 ?        00:00:00 flock -n /tmp/sand-web-bot-auth.log.lock /exec-daemon/node /usr/local/bin/box-bounded-log.mjs /tmp/sand-web-bot-auth.log 249
+box          260     257  0 09:06 ?        00:00:12 /exec-daemon/node /usr/local/bin/box-bounded-log.mjs /tmp/sand-web-bot-auth.log 249
+box          287      53  1 09:06 ?        00:06:05 /exec-daemon/node /usr/local/bin/sand-ua-governor.mjs
+box          295     287  0 09:06 ?        00:00:00 bash /usr/local/bin/box-bounded-log --run /tmp/sand-ua-governor.log -- /exec-daemon/node /usr/local/bin/sand-ua-governor.mjs
+box          298     295  0 09:06 ?        00:00:00 flock -n /tmp/sand-ua-governor.log.lock /exec-daemon/node /usr/local/bin/box-bounded-log.mjs /tmp/sand-ua-governor.log 287
+box          300     298  0 09:06 ?        00:00:15 /exec-daemon/node /usr/local/bin/box-bounded-log.mjs /tmp/sand-ua-governor.log 287
+box          337      53  0 09:06 ?        00:00:58 /exec-daemon/node /usr/local/bin/sand-cookie-persist.mjs
+box          338      53  0 09:06 ?        00:00:19 bash /usr/local/bin/supervise-exec-daemon 1337 /usr/local/bin/start-exec-daemon
+box          339      53  0 09:06 ?        00:00:17 bash /usr/local/bin/supervise-egress-tunnel 8790 /usr/local/bin/start-egress-tunnel
+box          370     338  0 09:06 ?        00:00:00 bash /usr/local/bin/start-exec-daemon
+box          373     370  0 09:06 ?        00:00:33 /exec-daemon/node /exec-daemon/index.js serve --port 1337 --pty-websocket-port 1338 --auth-token local --rg-path /exec-daemon/rg --pty-auth-token local-pty --computer-use-enabled --computer-use-lazy-init --computer-use-api-width 1280 --computer-use-api-height 800 --mcp-meta-tool-enabled --origin-cli-enabled --orbitd-proxy-socket /run/orbitd-proxy/rpc.sock
+box          374     339  0 09:06 ?        00:00:02 /usr/local/bin/sand-egress-tunnel server
+box          456      53  0 09:06 ?        00:00:05 bash /usr/local/bin/supervise-sand-supervisor /tmp/sand-supervisor/status.json /tmp/sand-supervisor.log /exec-daemon/node /usr/local/bin/sand-supervisor.mjs
+box          469     456  0 09:06 ?        00:01:11 /exec-daemon/node /usr/local/bin/sand-supervisor.mjs
+box          470     456  0 09:06 ?        00:00:03 bash -c while sleep "$1"; do kill -USR1 "$2" 2>/dev/null || exit 0; done ticker 5 456
+box          487      53  0 09:06 ?        00:00:00 bash /usr/local/bin/start-desktop.sh
+box          493     487  0 09:06 ?        00:00:00 bash /usr/local/bin/box-bounded-log --run /tmp/start-desktop.log -- /usr/local/bin/start-desktop.sh
+box          494     493  0 09:06 ?        00:00:00 flock -n /tmp/start-desktop.log.lock /exec-daemon/node /usr/local/bin/box-bounded-log.mjs /tmp/start-desktop.log 487
+box          495     494  0 09:06 ?        00:00:12 /exec-daemon/node /usr/local/bin/box-bounded-log.mjs /tmp/start-desktop.log 487
+box          541       1  0 09:06 ?        00:00:00 /usr/bin/dbus-daemon --syslog --fork --print-pid 4 --print-address 6 --session
+box          546     487  0 09:06 ?        00:00:36 Xvfb :1 -screen 0 1920x1200x24 -ac +extension GLX +render -noreset
+box          551     546  0 09:06 ?        00:00:00 bash /usr/local/bin/box-bounded-log --run /tmp/xvfb:1.log -- /usr/local/bin/box-xvfb :1 -screen 0 1920x1200x24 -ac +extension GLX +render -noreset
+box          552     551  0 09:06 ?        00:00:00 flock -n /tmp/xvfb:1.log.lock /exec-daemon/node /usr/local/bin/box-bounded-log.mjs /tmp/xvfb:1.log 546
+box          554     552  0 09:06 ?        00:00:19 /exec-daemon/node /usr/local/bin/box-bounded-log.mjs /tmp/xvfb:1.log 546
+box          559     546  0 09:06 ?        00:00:00 [bash] <defunct>
+root         616      53  0 09:06 ?        00:01:09 /usr/bin/python3 /usr/local/bin/sand-memory-watch --telemetry-log /tmp/sand-box-telemetry.log
+root         637      53  0 09:06 ?        00:00:00 /usr/local/libexec/sand/sand-daemon-supervisor run orbitd
+root         639     637  0 09:06 ?        00:00:00 bash /usr/local/bin/box-bounded-log --run /tmp/sand-orbitd.log -- env -i PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin /usr/local/libexec/sand/sand-daemon-supervisor run orbitd

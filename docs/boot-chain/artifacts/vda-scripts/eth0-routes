@@ -1,0 +1,84 @@
+#!/bin/bash
+# Preserve required routes for eth0.
+
+set -u
+
+INTERFACE="${ETH0_ROUTES_INTERFACE:-eth0}"
+IP_BIN="${ETH0_ROUTES_IP_BIN:-ip}"
+DESTINATIONS=("192.168.0.0/16" "172.16.0.0/12" "10.0.0.2/32")
+PREFERENCES=(520 521 522)
+
+log() {
+  printf '[eth0-routes] %s\n' "$*" >&2
+}
+
+ip_cmd() {
+  "${IP_BIN}" "$@"
+}
+
+rule_exists() {
+  local destination="$1"
+  local preference="$2"
+  local displayed_destination="${destination%/32}"
+
+  ip_cmd -o -4 rule show 2>/dev/null |
+    awk -v preference="${preference}:" -v destination="${displayed_destination}" '
+      $1 == preference {
+        has_destination = 0
+        has_main = 0
+        for (i = 1; i <= NF; i++) {
+          if ($i == "to" && $(i + 1) == destination) has_destination = 1
+          if (($i == "lookup" || $i == "table") && $(i + 1) == "main") has_main = 1
+        }
+        if (has_destination && has_main) found = 1
+      }
+      END { exit !found }
+    '
+}
+
+ensure_rule() {
+  local destination="$1"
+  local preference="$2"
+
+  rule_exists "${destination}" "${preference}" && return 0
+  ip_cmd -4 rule del pref "${preference}" 2>/dev/null || true
+  ip_cmd -4 rule add to "${destination}" lookup main pref "${preference}" 2>/dev/null ||
+    rule_exists "${destination}" "${preference}"
+}
+
+main() {
+  local gateway index
+
+  if [[ "${1:-reconcile}" != reconcile ]]; then
+    echo "usage: $0 [reconcile]" >&2
+    return 2
+  fi
+
+  for index in "${!DESTINATIONS[@]}"; do
+    ensure_rule "${DESTINATIONS[${index}]}" "${PREFERENCES[${index}]}" || return 1
+  done
+
+  gateway="$(ip_cmd -o -4 route show table main default dev "${INTERFACE}" 2>/dev/null |
+    awk '{
+      for (i = 1; i <= NF; i++) {
+        if ($i == "via") {
+          print $(i + 1)
+          exit
+        }
+      }
+    }')"
+  [[ -n "${gateway}" ]] || {
+    log "eth0 gateway unavailable"
+    return 1
+  }
+
+  ip_cmd -4 route replace table main "${gateway}/32" \
+    dev "${INTERFACE}" proto static || return 1
+
+  for index in "${!DESTINATIONS[@]}"; do
+    ip_cmd -4 route replace table main "${DESTINATIONS[${index}]}" \
+      via "${gateway}" dev "${INTERFACE}" proto static || return 1
+  done
+}
+
+main "$@"

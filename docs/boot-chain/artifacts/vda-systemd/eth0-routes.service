@@ -1,0 +1,12 @@
+[Unit]
+Description=eth0-routes full-tunnel route protection
+After=network.target
+Before=docker.service isod.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/eth0-routes reconcile
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

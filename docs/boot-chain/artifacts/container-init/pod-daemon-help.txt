@@ -1,0 +1,40 @@
+Usage: pod-daemon [OPTIONS]
+
+Options:
+      --config <CONFIG>
+          Windows guest bootstrap configuration
+
+      --listen-addr <LISTEN_ADDR>
+          gRPC server listen address
+          
+          [default: 0.0.0.0:26500]
+
+      --self-check-only
+          Build the process manager and gRPC server, bind the listen address, then exit before serving
+
+      --api-listen-addr <API_LISTEN_ADDR>
+          Second listen address serving the same PodDaemonService for callers that reach the pod directly through the API proxy lane. Unset serves nothing; setting it requires `--auth-token-sha256`
+
+      --auth-token-sha256 <AUTH_TOKEN_SHA256>
+          Lowercase hex SHA-256 digest of the PodDaemonService bearer token.
+          
+          This verifier is not a bearer credential and is safe to persist in immutable container argv.
+
+      --max-processes <MAX_PROCESSES>
+          Maximum number of processes to track
+          
+          [default: 1000]
+
+      --stream-buffer-size <STREAM_BUFFER_SIZE>
+          Buffer size for process output streams
+          
+          [default: 8192]
+
+      --low-events-per-process <LOW_EVENTS_PER_PROCESS>
+          Low watermark for process replay events kept in memory
+          
+          [default: 10000]
+
+      --high-events-per-process <HIGH_EVENTS_PER_PROCESS>
+          High watermark for process replay events kept in memory before trimming to low watermark
+          

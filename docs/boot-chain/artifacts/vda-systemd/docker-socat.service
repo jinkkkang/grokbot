@@ -1,0 +1,22 @@
+[Unit]
+Description=Expose Docker socket via TCP using socat
+After=docker.service
+Requires=docker.service
+BindsTo=docker.service
+
+[Service]
+Type=simple
+ExecStartPre=/bin/bash -c 'echo "[docker-socat] Waiting for Docker socket..." >&2; while [ ! -S /var/run/docker.sock ]; do sleep 0.1; done; echo "[docker-socat] Docker socket is ready" >&2'
+ExecStart=/usr/bin/socat -d -d TCP-LISTEN:2375,reuseaddr,fork UNIX-CONNECT:/var/run/docker.sock
+Restart=always
+RestartSec=5
+StandardOutput=console
+StandardError=console
+
+# Environment to disable color output
+Environment="TERM=dumb"
+Environment="NO_COLOR=1"
+Environment="FORCE_COLOR=0"
+
+[Install]
+WantedBy=multi-user.target

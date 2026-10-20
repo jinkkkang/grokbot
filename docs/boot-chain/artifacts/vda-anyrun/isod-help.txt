@@ -1,0 +1,15 @@
+Isolation daemon for managing containers via gRPC
+
+Usage: isod [OPTIONS]
+
+Options:
+      --base-dir <BASE_DIR>
+          Base directory for container data [default: /tmp/isod]
+      --listen-addr <LISTEN_ADDR>
+          Address to listen on [default: 127.0.0.1:50052]
+      --build-info-path <BUILD_INFO_PATH>
+          Path to rootfs build-info stamp (default: /etc/anyrun/build-info). Loaded once at startup; overrides ISOD_BUILD_INFO_PATH when set
+      --self-check-only
+          Build the container manager and gRPC service, bind the listener, then exit before reloading runc state or serving
+  -h, --help
+          Print help
