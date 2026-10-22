@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Open Chromium on the shared CDP profile (same instance entrypoint started).
+set -euo pipefail
+export DISPLAY="${DISPLAY:-:1}"
+USER_DATA="${CHROME_USER_DATA_DIR:-${HOME}/chrome-profile}"
+mkdir -p "${USER_DATA}"
+exec /usr/bin/chromium \
+  --no-first-run \
+  --no-default-browser-check \
+  --disable-dev-shm-usage \
+  --disable-gpu \
+  --class=box-chrome \
+  --user-data-dir="${USER_DATA}" \
+  --remote-debugging-port="${CDP_PORT:-9222}" \
+  "$@"
