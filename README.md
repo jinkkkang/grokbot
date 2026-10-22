@@ -108,7 +108,7 @@ pod-daemon                   沙箱运行时。由它创建容器内进程
 | **仓库根（sysinfo）** | 某一时刻的只读命令输出：进程、磁盘、网络、包列表。采集点在容器内 | 核对「当时容器里长什么样」。会过期 |
 | **[`sand-scripts/`](sand-scripts/)** | 从 `/usr/local/bin`（以及一处 libexec）抄出的文本脚本，加了中文注释 | 读「代码打算怎么启动」。路径在沙箱里是 `/usr/local/bin/...`，在本仓库里多了一层 `sand-scripts/<子目录>/` |
 | **[`docs/boot-chain/`](docs/boot-chain/BOOT-CHAIN-FULL.md)** | 客户机底座启动链，加上 unit、底座脚本、脱敏 OCI / runc state | 先读全文，再按第 8 节进 [`artifacts/`](docs/boot-chain/artifacts/) |
-| **[`novnc-desktop/`](novnc-desktop/)** | 自行构建的网页桌面配方（Xvfb + noVNC），不是采集快照 | 想在 Docker 里得到相近的浏览器、文件管理器和终端时再读 |
+| **[`novnc-desktop/`](novnc-desktop/)** | 自行构建的网页桌面配方（noVNC 6080、CDP 9222、MCP 8931），不是采集快照 | 想在 Docker 里得到同一只浏览器的桌面、CDP 和 MCP 时再读 |
 
 根上的 [`MANIFEST.txt`](MANIFEST.txt) 只覆盖 sysinfo，**不含** `sand-scripts/`。脚本树自己的清单是 [`sand-scripts/MANIFEST.txt`](sand-scripts/MANIFEST.txt)（注释写明生成时的 size/sha256；本指南往脚本里加了中文注释之后，那些哈希不再等于工作区）。
 
@@ -127,9 +127,9 @@ pod-daemon                   沙箱运行时。由它创建容器内进程
 
 ## 自己搭网页桌面（DIY）
 
-[`novnc-desktop/`](novnc-desktop/) 是一份自包含的 Docker 配方，用来在浏览器里得到相近的桌面：Chromium、Thunar 文件管理器、xfce4-terminal。镜像基于 Debian bookworm，会话是 Xvfb + xfwm4 + plank，经 x11vnc 与 websockify/noVNC 开在端口 6080。构建和运行写在 [`novnc-desktop/README.md`](novnc-desktop/README.md)。
+[`novnc-desktop/`](novnc-desktop/) 是一份自包含的 Docker 配方，用来在浏览器里得到相近的桌面：Chromium、Thunar 文件管理器、xfce4-terminal。镜像基于 Debian bookworm，会话是 Xvfb + xfwm4 + plank。同一只 Chromium 有三条入口：noVNC `6080`、CDP `9222`（Chromium 听 localhost:9223，由 socat 发布到 0.0.0.0:9222）、Playwright MCP `8931`（`--cdp-endpoint http://127.0.0.1:9223`）。底栏浏览器走 `/usr/local/bin/box-chrome`，共用 `--user-data-dir`。构建和运行写在 [`novnc-desktop/README.md`](novnc-desktop/README.md)。
 
-这是用发行版软件包做的简化重做，只复刻「网页里能看到桌面」这一层。它不是闭源 sand / orbitd 栈的转储，也不包含 [`sand-scripts/desktop/`](sand-scripts/desktop/) 里采集来的专有启动脚本。
+这是用发行版软件包做的简化重做。它不是闭源 sand / orbitd 栈的转储，也不包含 [`sand-scripts/desktop/`](sand-scripts/desktop/) 里采集来的专有启动脚本。
 
 ---
 
@@ -309,4 +309,4 @@ The full chain, with units and redacted OCI/runc state, is [`docs/boot-chain/BOO
 
 Read [`sand-scripts/README.md`](sand-scripts/README.md) for the in-container sequence diagram. The file table above inventories the sysinfo snapshot and `sand-scripts/`; `docs/boot-chain/` is listed in the boot-chain doc. Ports 1337/1338 are the primary exec daemon, 1339 the window router, 5900/6080 the primary VNC/noVNC pair, 6081 fork noVNC, 8790/8791 the egress tunnel, 14000+N and 13600+N fork exec/PTY, 9222+display Chrome CDP.
 
-[`novnc-desktop/`](novnc-desktop/) is a separate DIY recipe for a similar browser, file manager, and terminal desktop in Docker (Xvfb + noVNC on port 6080). It is not a dump of the closed sand/orbitd stack.
+[`novnc-desktop/`](novnc-desktop/) is a separate DIY recipe for a similar browser, file manager, and terminal desktop in Docker. The same headed Chromium is reachable over noVNC on port 6080, CDP on 9222 (Chromium listens on localhost:9223; socat publishes 0.0.0.0:9222), and Playwright MCP on 8931. It is not a dump of the closed sand/orbitd stack.
